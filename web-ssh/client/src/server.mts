@@ -11,14 +11,6 @@ const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 const shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
-const ptyProcess = pty.spawn(shell, [], {
-  name: 'xterm-color',
-  cols: 80,
-  rows: 30,
-  cwd: process.env.HOME,
-  env: process.env
-});
-
 app.prepare().then(() => {
   const httpServer = createServer(handle);
   const io = new Server(httpServer);
@@ -37,7 +29,7 @@ app.prepare().then(() => {
     });
 
     ptyProcess.onData(chunk => {
-      process.stdout.write(chunk);
+      // process.stdout.write(chunk);
       socket.emit("pty:output", chunk);
     });
 
@@ -51,6 +43,9 @@ app.prepare().then(() => {
       ptyProcess.kill();
     });
 
+    ptyProcess.onExit((e) => {
+      console.log(`Shell process terminated: ${e.exitCode}`);
+    });
 
   });
 
