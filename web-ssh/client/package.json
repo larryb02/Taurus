@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:socket": "NODE_OPTIONS='--loader ts-node/esm --trace-warnings --no-warnings' ts-node src/server.mts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -11,8 +12,11 @@
   "dependencies": {
     "@xterm/xterm": "^5.5.0",
     "next": "15.3.2",
+    "node-pty": "file:../node-pty",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -21,6 +25,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }

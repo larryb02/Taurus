@@ -1,3 +1,8 @@
+# TODO-LIST
+todo.*
+
+# modules...
+node-pty
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
