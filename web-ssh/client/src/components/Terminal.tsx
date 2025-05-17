@@ -16,11 +16,9 @@ export default function terminal() { // need to resolve naming conflicts...
   term.onData(data => {
     console.log(`sending input event: ${data}`);
     socket.emit("terminal:input", data);
-    // term.write(data);
   });
 
   socket.on("pty:output", (chunk) => {
-    // console.log(`pty:output event received.`);
     term.write(chunk);
   })
 
