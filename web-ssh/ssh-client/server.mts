@@ -19,7 +19,7 @@ const io = new Server(httpServer, {
 
 
 io.on("connection", async (socket) => {
-  console.log("user connected to socket");
+  console.log("user connected to socket: ", socket.id);
   new Pty(socket);
 
 });

@@ -1,18 +1,18 @@
 {
-  "name": "client",
+  "name": "ssh-client",
+  "description": "handles ssh client for web ssh",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
-    "dev:socket": "NODE_OPTIONS='--loader ts-node/esm --trace-warnings' ts-node ./server.mts",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "NODE_OPTIONS='--loader ts-node/esm --trace-warnings' ts-node ./server.mts",
+    "build": "",
+    "start": ""
   },
   "dependencies": {
     "next": "15.3.2",
     "node-pty": "file:../node-pty",
+    "pino": "^9.6.0",
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
