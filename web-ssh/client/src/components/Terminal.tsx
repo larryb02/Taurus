@@ -6,7 +6,7 @@ import io  from 'socket.io-client';
 
 export default function terminal() { // need to resolve naming conflicts...
     const term = new Terminal();
-    const socket = io();
+    const socket = io("http://localhost:3001");
     useEffect(() => {
     if (document.getElementById('terminal')){
       term.open(document.getElementById('terminal') as HTMLElement);
@@ -20,7 +20,7 @@ export default function terminal() { // need to resolve naming conflicts...
   });
 
   socket.on("pty:output", (chunk) => {
-    console.log(`pty:output event received.`);
+    // console.log(`pty:output event received.`);
     term.write(chunk);
   })
 
