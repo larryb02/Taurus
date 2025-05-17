@@ -7,7 +7,7 @@ export class Pty {
 
     constructor(socket: Socket) {
             console.log(`spawning pty process`);
-            this.ptyProcess = pty.spawn("ssh", ["cis-linux2.temple.edu"], {
+            this.ptyProcess = pty.spawn("ssh", [""], {
                 name: 'xterm-color',
                 cols: 80,
                 rows: 30,
