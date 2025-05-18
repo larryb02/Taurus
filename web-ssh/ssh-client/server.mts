@@ -13,15 +13,18 @@ const port = 3001
 const httpServer = createServer();
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
+    origin: "http://localhost:3000",
   }
 });
 
 
 io.on("connection", async (socket) => {
   console.log("user connected to socket: ", socket.id);
-  new Pty(socket);
-
+  // get credentials for ssh connection here
+  socket.on("sessionData", (destination) => {
+    // console.log(destination);
+    new Pty(socket, "user", destination);
+  });
 });
 
 httpServer.listen(port, () => {

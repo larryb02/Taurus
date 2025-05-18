@@ -5,9 +5,9 @@ export class Pty {
     // ptyId: number;
     readonly ptyProcess: pty.IPty;
 
-    constructor(socket: Socket) {
+    constructor(socket: Socket, user: string, host: string, identity?: string) {
             console.log(`spawning pty process`);
-            this.ptyProcess = pty.spawn("ssh", [""], {
+            this.ptyProcess = pty.spawn("ssh", [host], {
                 name: 'xterm-color',
                 cols: 80,
                 rows: 30,
@@ -18,7 +18,7 @@ export class Pty {
                 socket.emit("pty:output", chunk);
             });
             socket.on("terminal:input", (chunk) => {
-                // console.log(`terminal:input event received: ${chunk}`);
+                console.log(`terminal:input event received: ${chunk}`);
                 this.ptyProcess.write(chunk);
             });
             socket.on("disconnect", () => {
