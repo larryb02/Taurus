@@ -5,7 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_OPTIONS='--loader ts-node/esm --trace-warnings' ts-node ./server.mts",
+    "dev": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./server.mts",
+    "dev:test": "nodemon",
     "build": "",
     "start": ""
   },
@@ -20,6 +21,7 @@
     "@types/node": "^20",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
+    "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5"
   }

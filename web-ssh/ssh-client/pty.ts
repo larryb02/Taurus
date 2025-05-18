@@ -1,12 +1,12 @@
 import * as pty from 'node-pty';
 import { Socket } from 'socket.io';
+import { logger } from '../logger/logger.mts';
 
 export class Pty {
-    // ptyId: number;
     readonly ptyProcess: pty.IPty;
 
     constructor(socket: Socket, user: string, host: string, identity?: string) {
-            console.log(`spawning pty process`);
+            logger.info("spawning pty process");
             this.ptyProcess = pty.spawn("ssh", [host], {
                 name: 'xterm-color',
                 cols: 80,
@@ -18,22 +18,24 @@ export class Pty {
                 socket.emit("pty:output", chunk);
             });
             socket.on("terminal:input", (chunk) => {
-                console.log(`terminal:input event received: ${chunk}`);
+                // console.log(`terminal:input event received: ${chunk}`);
                 this.ptyProcess.write(chunk);
             });
             socket.on("disconnect", () => {
-                console.log("user has disconnected from socket.");
+                logger.info(`User has disconnected from socket ${socket.id}`);
+                // console.log("user has disconnected from socket.");
                 this.ptyProcess.kill();
             });
             this.ptyProcess.onExit((e) => {
-                console.log(`Shell process terminated: ${e.exitCode}, ${e.signal}`);
+                logger.info(`Shell process terminated: Status Code: ${e.exitCode}, Signal: ${e.signal}`);
+                // console.log(`Shell process terminated: ${e.exitCode}, ${e.signal}`);
                 const exitCode = e.exitCode;
                 switch (exitCode) {
                     case 0:
-                        console.log(`Succesfully terminated pty`)
+                        logger.info("Successfully terminated Pty");
                         break;
                     case 1:
-                        console.error(`Error spawning pty: Code: ${e.exitCode}, Signal: ${e.signal}`);
+                        logger.error(`Error spawning pty: Status Code: ${e.exitCode}, Signal: ${e.signal}`);
                         socket.emit("Error", {"Exit_Code": exitCode, "Signal": e.signal});
                         break;
                 }
