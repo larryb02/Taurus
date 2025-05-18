@@ -6,8 +6,6 @@ import { useEffect, useRef } from 'react';
 import { socket } from '../socket';
 
 export default function terminal(props) { // need to resolve naming conflicts...
-  // const socketRef = useRef<Socket | null>(null);
-  // let socket: Socket;
   useEffect(() => {
     const term = new Terminal();
     console.log(`New terminal instance created`);

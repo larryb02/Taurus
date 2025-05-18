@@ -24,19 +24,19 @@ export default function session() {
         return (<div>Loading!!!</div>);
     }
 
-    if (!sessionStarted) {
+    if (sessionStarted) {
         return (
-            <div>
-                <label>Hostname</label>
-                <input type="text" onChange={(e) => { setDestination(e.target.value) }}></input>
-                <button onClick={() => { 
-                    startSession(); 
-                    }}>Submit</button>
-            </div>
-        )
+            <div><Terminal destination={destination} /></div>
+        );
     }
 
     return (
-        <div><Terminal destination={destination}/></div>
-    );
+        <div>
+            <label>Hostname</label>
+            <input type="text" onChange={(e) => { setDestination(e.target.value) }}></input>
+            <button onClick={() => {
+                startSession();
+            }}>Submit</button>
+        </div>
+    )
 }
