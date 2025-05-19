@@ -1,7 +1,7 @@
 # web-ssh
 A web based ssh client that manages passwords and connections. 
 
-Aiming to provide a modern experience to remote-based terminal workflows. (Name Here) provides the ability to save and manage remote connections from any machine, open multiple terminal sessions, and automate ssh key generation &#151; without installing any software.
+Aiming to provide a modern experience to remote-based terminal workflows. (Name Here) provides the ability to save and manage remote connections from any machine, open multiple terminal sessions, and automate ssh key generation &mdash; without installing any software.
 
 ## Current Features
 - SSH
