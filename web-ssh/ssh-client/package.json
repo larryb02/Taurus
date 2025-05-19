@@ -5,8 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./server.mts",
-    "dev:test": "nodemon",
+    "dev": "nodemon",
     "build": "",
     "start": ""
   },

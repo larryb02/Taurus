@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
-import { Pty } from './pty.ts';
+import { Pty } from './pty.mts';
 import { logger } from '../logger/logger.mts';
 
 // entry point for terminal session
