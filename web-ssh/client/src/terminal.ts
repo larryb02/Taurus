@@ -1,11 +1,12 @@
 import { Terminal } from '@xterm/xterm';
 import { Socket } from 'socket.io-client';
+import { socket } from './socket';
 export class TerminalHandler {
     readonly term: Terminal;
     readonly socket: Socket;
     private _destination: string;
 
-    constructor(socket: Socket, destination: string) {
+    constructor(destination: string) {
         this.term = new Terminal();
         this.socket = socket;
         this._destination = destination
@@ -39,7 +40,7 @@ export class TerminalHandler {
     }
 
     public dispose() {
-        this.socket.disconnect();
         this.term.dispose();
+        this.socket.disconnect();
     }
 }

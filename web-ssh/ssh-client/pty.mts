@@ -24,7 +24,10 @@ export class Pty {
             socket.on("disconnect", () => {
                 logger.info(`User has disconnected from socket ${socket.id}`);
                 // console.log("user has disconnected from socket.");
-                this.ptyProcess.kill();
+                this.ptyProcess.write('exit\r');
+                setTimeout(() => {
+                    this.ptyProcess.kill('SIGTERM');
+                  }, 300);
             });
             this.ptyProcess.onExit((e) => {
                 logger.info(`Shell process terminated: Status Code: ${e.exitCode}, Signal: ${e.signal}`);
@@ -40,6 +43,9 @@ export class Pty {
                         break;
                 }
             });
+            socket.on("error", err => {
+                logger.error(`Error ${err}`);
+            })
         }
 }
 
