@@ -1,6 +1,0 @@
-{
-    "watch": ["*.mts", "*.ts"],
-    "ext": "mts,ts",
-    "exec": "node server.mts"
-  }
-  

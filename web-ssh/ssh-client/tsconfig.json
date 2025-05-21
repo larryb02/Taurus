@@ -1,17 +1,18 @@
 {
   "compilerOptions": {
-    "module": "ES2022",
+    "module": "NodeNext",
     "target": "ES2024",
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "strict": true,
-    "resolveJsonModule": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": true
+    // "resolveJsonModule": true,
+    // "allowImportingTsExtensions": true,
+    // "noEmit": true
+    "outDir": "dist"
   },
-  "include": ["**/*.ts", "**/*.mts","pty.mts"]
+  "include": ["**/*.ts"]
 }
 
 

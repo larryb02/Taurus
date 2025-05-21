@@ -5,15 +5,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=dev nodemon",
-    "build": "",
+    "dev": "NODE_ENV=dev tsx watch ./server.ts",
+    "build": "tsc ./*",
     "start": ""
   },
   "dependencies": {
     "next": "15.3.2",
     "node-pty": "file:../node-pty",
     "pino": "^9.6.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "tsx": "^4.19.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

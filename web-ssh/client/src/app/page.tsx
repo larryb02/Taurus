@@ -1,7 +1,6 @@
 "use client";
 // import Terminal from "../components/Terminal";
 import { useState, useEffect } from "react";
-import { socket } from '../socket';
 import { TerminalHandler } from "../terminal";
 import '@xterm/xterm/css/xterm.css';
 
@@ -21,7 +20,9 @@ export default function Session() {
       }
 
       return () => {
+        console.log("Calling cleanup function");
         termHandler?.dispose();
+        // setSessionStarted(false);
       }
     }, [sessionStarted, termHandler]);
 
@@ -33,7 +34,7 @@ export default function Session() {
         }
         setIsLoading(true);
         console.log(`starting ssh connection to ${destination}`);
-        const handler = new TerminalHandler(socket, destination);
+        const handler = new TerminalHandler(destination);
         setTermHandler(handler);
         setSessionStarted(true);
         setIsLoading(false);
