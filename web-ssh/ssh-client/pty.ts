@@ -2,25 +2,27 @@ import * as pty from 'node-pty';
 import { Socket } from 'socket.io';
 import { logger } from '../logger/logger.js';
 import { setTimeout } from 'node:timers';
+import { SSHConn } from './ssh.js';
 
 export class Pty {
-    private readonly ptyProcess: pty.IPty;
-    readonly ptyPID: number
+    private ptyProcess: pty.IPty;
+    ptyPID: number = -1;
     private readonly socket: Socket;
 
-    constructor(socket: Socket, user: string, host: string, identity?: string) {
+    constructor(socket: Socket, user: string, host: string) {
         logger.info("spawning pty process");
-        this.ptyProcess = pty.spawn("ssh", [host], {
-            name: 'xterm-color',
-            cols: 80,
-            rows: 30,
-            cwd: process.env.HOME,
-            env: process.env
-        });
-        this.ptyPID = this.ptyProcess.pid;
         this.socket = socket;
-
+        this.ptyProcess = this.startPty();
         this.registerEvents();
+        // this.ptyProcess = pty.spawn("ssh", [host], {
+        //     name: 'xterm-color',
+        //     cols: 80,
+        //     rows: 30,
+        //     cwd: process.env.HOME,
+        //     env: process.env
+        // });
+        this.ptyPID = this.ptyProcess.pid;
+        // logger.debug(`process launched ${this.ptyPID}`);
     }
 
     private registerEvents() {
@@ -41,7 +43,6 @@ export class Pty {
             }, 300);
         });
         this.ptyProcess.onExit((e) => {
-            logger.info(`Shell process terminated: Status Code: ${e.exitCode}, Signal: ${e.signal}`);
             // console.log(`Shell process terminated: ${e.exitCode}, ${e.signal}`);
             const exitCode = e.exitCode;
             switch (exitCode) {
@@ -53,10 +54,29 @@ export class Pty {
                     this.socket.emit("Error", { "Exit_Code": exitCode, "Signal": e.signal });
                     break;
             }
+            logger.info(`Shell process [${this.ptyPID}] terminated`);
+            // then remove reference gc should handle rest we'll see once we add multi-term support
         });
         this.socket.on("error", err => {
             logger.error(`Error ${err}`);
         });
+    }
+    private startPty(): pty.IPty {
+        // 1. create connection string based on parameters
+        // 2. spawn pty using generated command string
+        // 3. if password required manually write it to pty
+        const con = new SSHConn("dummy", "server");
+        // con.build();
+        logger.debug(con.command);
+        let p = pty.spawn("ssh", con.command, {
+            name: 'xterm-color',
+            cols: 80,
+            rows: 30,
+            cwd: process.env.HOME,
+            env: process.env
+        });
+        logger.debug(`Created new pty process ${p.pid}`);
+        return p;
     }
     private parseForErrors(ptyOutput: string): string | null {
         const errors: string[] = [
