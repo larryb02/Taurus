@@ -26,7 +26,6 @@ export class Pty {
     }
 
     private registerEvents() {
-        // TODO: stub for registering event listeners
         this.ptyProcess.onData(chunk => {
             this.socket.emit("pty:output", chunk);
         });

@@ -1,8 +1,3 @@
-// export interface SSHConn {
-//     user: string
-//     host: string
-//     identity: string
-// }
 import { logger } from '../logger/logger.js';
 
 export class SSHConn {
