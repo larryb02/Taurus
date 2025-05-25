@@ -15,6 +15,8 @@ export class TerminalHandler {
 
     private registerEvents() {
         this.socket.on("connect", () => {
+            // start of the handshake should emit event signaling start of session
+            // react component will need to use this event to determine that terminal is still loading
             this.socket.emit("sessionData", this._destination);
             console.log(`Connected: ${this.socket.id}`);
         });

@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import { Pty } from './pty.js';
-import { logger } from '../logger/logger.js';
+import { logger } from './logger/logger.js';
 
 // entry point for terminal session 
 

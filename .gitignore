@@ -26,10 +26,12 @@ node-pty
 
 # production
 /build
+**/dist
 
 # misc
 .DS_Store
 *.pem
+logger.bak
 
 # debug
 npm-debug.log*
@@ -46,3 +48,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# docker
+.config

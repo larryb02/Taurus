@@ -1,6 +1,6 @@
 import * as pty from 'node-pty';
 import { Socket } from 'socket.io';
-import { logger } from '../logger/logger.js';
+import { logger } from './logger/logger.js';
 import { setTimeout } from 'node:timers';
 import { SSHConn } from './ssh.js';
 
@@ -10,7 +10,6 @@ export class Pty {
     private readonly socket: Socket;
 
     constructor(socket: Socket, user: string, host: string) {
-        logger.info("spawning pty process");
         this.socket = socket;
         this.ptyProcess = this.startPty();
         this.registerEvents();
@@ -22,7 +21,7 @@ export class Pty {
         //     env: process.env
         // });
         this.ptyPID = this.ptyProcess.pid;
-        // logger.debug(`process launched ${this.ptyPID}`);
+        logger.debug(`process launched ${this.ptyPID}`);
     }
 
     private registerEvents() {
@@ -64,7 +63,7 @@ export class Pty {
         // 1. create connection string based on parameters
         // 2. spawn pty using generated command string
         // 3. if password required manually write it to pty
-        const con = new SSHConn("dummy", "server");
+        const con = new SSHConn("dummy", "openssh-server");
         // con.build();
         logger.debug(con.command);
         let p = pty.spawn("ssh", con.command, {
