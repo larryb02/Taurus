@@ -9,7 +9,7 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
       # - PUBLIC_KEY= #optional
-      - PUBLIC_KEY_FILE=/Users/larrybanks/.ssh/doomy.pub #optional
+      # - PUBLIC_KEY_FILE= #optional
       # - PUBLIC_KEY_DIR=/path/to/directory/containing/_only_/pubkeys #optional
       # - PUBLIC_KEY_URL=https://github.com/username.keys #optional
       - SUDO_ACCESS=false #optional
@@ -18,10 +18,28 @@ services:
       # - USER_PASSWORD_FILE=/path/to/file #optional
       - USER_NAME=dummy #optional
       - LOG_STDOUT=true #optional
+      - LISTEN_PORT=22
     volumes:
-      # - /path/to/openssh-server/config:/config
-      - /Users/larrybanks/Projects/web-ssh/.config:/config
+      - ${COMPOSE_DIR}/.config:/config
     ports:
       - 2222:2222
+    networks:
+      - dev-net
     restart: unless-stopped
+
+  webssh-ssh-client:
+    image: ghcr.io/larryb02/webssh-client:latest
+    container_name: webssh-ssh-client
+    hostname: webssh-ssh-client
+    ports:
+      - 3001:3001
+    restart: unless-stopped
+    networks:
+      - dev-net
+    depends_on:
+      - openssh-server
+networks:
+  dev-net:
+    driver: bridge
+
 
