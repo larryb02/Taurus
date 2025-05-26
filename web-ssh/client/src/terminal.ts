@@ -37,7 +37,10 @@ export class TerminalHandler {
 
     public init() {
         this.socket.connect();
-        this.term.open(document.getElementById('terminal'));
+        const el = document.getElementById('terminal');
+        if (el) {
+            this.term.open(el);
+        }
         this.registerEvents();
     }
 
