@@ -36,8 +36,7 @@ services:
     restart: unless-stopped
     networks:
       - dev-net
-    depends_on:
-      - openssh-server
+
 networks:
   dev-net:
     driver: bridge
