@@ -22,7 +22,7 @@ services:
     volumes:
       - ${COMPOSE_DIR}/.config:/config
     ports:
-      - 2222:2222
+      - 2222:22
     networks:
       - dev-net
     restart: unless-stopped
