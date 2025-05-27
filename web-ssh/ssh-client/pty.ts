@@ -53,6 +53,7 @@ export class Pty {
                     break;
             }
             logger.info(`Shell process [${this.ptyPID}] terminated`);
+            this.socket.emit("sessionTerminated");
             // then remove reference gc should handle rest we'll see once we add multi-term support
         });
         this.socket.on("error", err => {

@@ -10,7 +10,6 @@ export default function session() {
     const [isLoading, setIsLoading] = useState(false);
     const [destination, setDestination] = useState("");
     const [sshConnectionData, setSshConnectionData] = useState<Record<string, string>>({});
-    const [status, setStatus] = useState<'ready' | 'loading' | 'connected' | 'disconnected' | 'error'>('ready');
     const [sessionStarted, setSessionStarted] = useState(false);
 
     useEffect(() => {
@@ -48,9 +47,18 @@ export default function session() {
                 term.write(chunk);
             });
 
+            socket.on("sessionTerminated", () => {
+                socket.disconnect();
+            })
+
             socket.on("disconnect", () => {
                 console.log(`Disconnected from Socket ${socket.id}`);
+                setSessionStarted(false);
             });
+
+            socket.on("error", (err) => {
+
+            })
 
         }
 
