@@ -9,7 +9,11 @@ export default function session() {
     // then need to establish a connection
     const [isLoading, setIsLoading] = useState(false);
     const [destination, setDestination] = useState("");
-    const [sshConnectionData, setSshConnectionData] = useState<Record<string, string>>({});
+    const [sshConnectionData, setSshConnectionData] = useState<Record<string, string>>({
+        "user": "",
+        "pass": "",
+        "hostname": ""
+    });
     const [sessionStarted, setSessionStarted] = useState(false);
 
     useEffect(() => {
@@ -20,8 +24,6 @@ export default function session() {
             if (document.getElementById('terminal')) {
                 term.open(document.getElementById('terminal') as HTMLElement);
             }
-
-            socket.connect();
             socket.on("connect", () => {
                 /*
                     - Attempt to connect to host 
@@ -32,8 +34,11 @@ export default function session() {
                     - If made it here connection should be established set status to 'connected'
                 */
                 // console.log(destination.destination);
-                socket.emit("sessionData", destination); // initial connection send user, host, and password
-                // need to listen for failures
+                socket.emit("sessionData", sshConnectionData); // initial connection send user, host, and password
+                // setIsLoading(true);
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 5000);
                 console.log("Connected: ", socket.id);
             });
 
@@ -51,18 +56,21 @@ export default function session() {
                 socket.disconnect();
             })
 
-            socket.on("disconnect", () => {
-                console.log(`Disconnected from Socket ${socket.id}`);
+            socket.on("disconnect", (reason) => {
+                console.log(`Disconnected from socket ${socket.id}\nReason: ${reason}`);
                 setSessionStarted(false);
             });
 
             socket.on("error", (err) => {
 
-            })
+            });
+
+            socket.connect();
 
         }
 
         return () => {
+            console.log("Cleanup called");
             socket.off('connect');
             socket.off('pty:output');
             socket.off('pty:disconnect');
@@ -72,13 +80,17 @@ export default function session() {
     }, [sessionStarted]);
 
     function startSession() {
-        if (destination === "") {
-            console.log(`destination cannot be empty.`);
-            // render an error here
-            return;
-        }
+        // if (destination === "") {
+        //     console.log(`destination cannot be empty.`);
+        //     // render an error here
+        //     return;
+        // }
         setIsLoading(true);
-        console.log(`starting ssh connection to ${destination}`);
+        console.log(`Connecting with session credentials:\n`);
+        for (const key in sshConnectionData) {
+            console.log(`${key}:${sshConnectionData[key]}`);
+        }
+        // console.log(`Connecting with session credentials ${sshConnectionData}`);
         setSessionStarted(true);
         setIsLoading(false);
     }
@@ -99,8 +111,16 @@ export default function session() {
 
     return (
         <div>
+            <label>Username</label>
+            <input type="text" onChange={(e) => {
+                setSshConnectionData({ ...sshConnectionData, "user": e.target.value });
+            }}></input>
             <label>Hostname</label>
-            <input type="text" onChange={(e) => { setDestination(e.target.value) }}></input>
+            <input type="text" onChange={(e) => { setSshConnectionData({ ...sshConnectionData, "hostname": e.target.value }); }}></input>
+            <label>Password</label>
+            <input type="password" onChange={(e) => {
+                setSshConnectionData({ ...sshConnectionData, "pass": e.target.value });
+            }}></input>
             <button onClick={() => {
                 startSession();
             }}>Submit</button>
