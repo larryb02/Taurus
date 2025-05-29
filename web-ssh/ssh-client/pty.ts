@@ -22,19 +22,16 @@ export class Pty {
             this._socket.emit("pty:output", chunk);
         });
         this._socket.on("terminal:input", (chunk) => {
-            // console.log(`terminal:input event received: ${chunk}`);
             proc.write(chunk);
         });
         this._socket.on("disconnect", () => {
             logger.info(`User has disconnected from socket ${this._socket.id}`);
-            // console.log("user has disconnected from socket.");
-            proc.write('exit\r');
+            proc.write('exit\r'); // needed for a clean exit from pty
             setTimeout(() => {
                 proc.kill('SIGTERM');
             }, 300);
         });
         proc.onExit((e) => {
-            // console.log(`Shell process terminated: ${e.exitCode}, ${e.signal}`);
             const exitCode = e.exitCode;
             switch (exitCode) {
                 case 0:
@@ -47,7 +44,7 @@ export class Pty {
             }
             logger.info(`Shell process [${this.ptyPID}] terminated`);
             this._socket.emit("sessionTerminated");
-            // then remove reference gc should handle rest we'll see once we add multi-term support
+            // disposing registered events would probably be a good idea here
         });
         this._socket.on("error", err => {
             logger.error(`Error ${err}`);
