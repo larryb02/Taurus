@@ -9,12 +9,11 @@ export class Pty {
     ptyPID: number = -1;
     private readonly _socket: Socket;
 
-    constructor(socket: Socket, user: string, host: string) {
+    constructor(socket: Socket, credentials: Record<string, string>) {
         this._socket = socket;
-        this._ptyProcess = this.startPty();
-        // this.registerEvents();
+        this._ptyProcess = this.startPty(credentials);
         this.ptyPID = this._ptyProcess.pid;
-        logger.debug(`process launched ${this.ptyPID}`);
+        logger.debug(`process launched [${this.ptyPID}]`);
     }
 
     private registerEvents(proc: pty.IPty) {
@@ -54,11 +53,13 @@ export class Pty {
             logger.error(`Error ${err}`);
         });
     }
-    private startPty(): pty.IPty {
+    private startPty(credentials: Record<string, string>): pty.IPty {
         // 1. create connection string based on parameters
         // 2. spawn pty using generated command string
         // 3. if password required manually write it to pty
-        const con = new SSHConn("dummy", "localhost");
+        const {user, hostname, pass} = credentials;
+        logger.debug(`Connecting with session credentials ${JSON.stringify(credentials)}`);
+        const con = new SSHConn(user, hostname);
         // con.build();
         logger.debug(con.command);
         let p = pty.spawn("ssh", con.command, {
@@ -69,47 +70,39 @@ export class Pty {
             env: process.env
         });
         logger.info(`Created new pty process [${p.pid}]`);
-        let buffer = "";
-
+        let registered = false;
         const ev = p.onData(chunk => {
             p.pause();
-            logger.debug(`Chunk: ${chunk}`);
-            // buffer += chunk;
-            // logger.debug(`Buffer: ${buffer}`);
-            if (!this.checkIfSignedIn(chunk)) {
+            logger.debug(`Chunk: ${JSON.stringify(chunk)}`);
+            // Note: this doesn't fully account for all cases yet, must improve
+            if (chunk === "\r") {}
+            else if (chunk.toLowerCase().includes("password:")) {
                 logger.info("User is not signed in. Signing in.");
-                p.write(`password\r`);
-                ev.dispose();
-                this.registerEvents(p);
-                // buffer = "";
-                // check if successful -> potentially looping behavior
+                p.write(`${pass}\r`);
             }
-            if (chunk.toLowerCase().includes("permission denied")) {
+            else if (!chunk.toLowerCase().includes("permission denied")) { // very hacky, need a robust way to 
+                                                                            // confirm sign in success or failure
+                if (!registered) { // most likely wont need this flag if i parse this properly
+                    logger.debug("Successfully signed in");
+                    this.registerEvents(p);
+                    registered = true;
+                    ev.dispose(); // this is most likely the problem, should not dispose of this event until i've confirmed success
+                }
+            }
+            else { // this will not execute properly until i fix the above ^
+                // just terminate session for now tell user to try again
                 logger.warn("Password is incorrect");
+                // p.kill();
             }
             p.resume();
-            // ev.dispose();
-            // else {
-            //     this.registerEvents(p);
-            //     ev.dispose();
-            // }
-            // p.resume();
         });
 
         p.onExit(() => {
             logger.debug("Too many failed attempts connection closed.");
+            // this._socket.emit("sessionTerminated");
         })
-        // logger.debug("Successfully signed in, registering events");
-
 
         return p;
-    }
-
-    private checkIfSignedIn(ptyOutput: string): boolean {
-        const msg: string = "password";
-        if (ptyOutput.includes(msg)) return false;
-
-        return true;
     }
 
     private parseForErrors(ptyOutput: string): string | null {
