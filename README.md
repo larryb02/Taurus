@@ -17,11 +17,31 @@ Manages terminal sessions
 User facing part of the application 
 - Initiates SSH session through SSH client
 - Displays terminal output and captures user input
+### REST API:
+- Auth
+- Manage ssh connection information (fetch, create, delete, etc) 
 <!-- - Insert UML diagram here -->
 ### Planned Components
 This section outlines future components that are actively being built or have been planned for future development.
 ### Diagram
 
 ## Get Started
-Currently in development mode, docker setup will be available by the end of the week.
+
+### Development
+Dev environment coming soon
+
+### How to Run
+If you're looking to try this application out make sure you're in the root directory and perform the following:
+```bash
+$ docker compose up
+```
+This spins up 2 containers: 
+- Openssh-server: For easy testing if you don't have a server to connect to
+- Webssh-ssh-client: ssh client for web ssh  
+**Note**: the container for the client side is a WIP, for now this is how you can run the client side
+From the root directory
+```bash
+$ cd ./web-ssh/client && npm install && npm run dev
+```
+On your browser type in http://localhost:3000 and start an ssh connection from there!
 
