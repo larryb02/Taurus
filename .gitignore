@@ -32,6 +32,7 @@ node-pty
 .DS_Store
 *.pem
 logger.bak
+**/*.bak
 
 # debug
 npm-debug.log*
