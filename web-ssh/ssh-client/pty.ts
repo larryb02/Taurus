@@ -111,7 +111,6 @@ export class Pty {
                     // check that authentication was successful if not terminate session
                     // (potentially implement retry logic in the future)
                     logger.debug("Current Step: SIGN IN");
-                    if (buffer === "\r") { } // hmm
                     if (buffer.toLowerCase().includes("password:")) {
                         logger.info("User is not signed in. Signing in.");
                         p.write(`${pass}\r`);
@@ -129,19 +128,22 @@ export class Pty {
                     }
                     if (buffer.toLowerCase().match(/[$#]\s*$/)) {
                         logger.info("Authentication successful. Entering shell.");
+                        this._socket.emit("pty:output", buffer);
                         buffer = "";
-                        step = Startup.READY;
-                        p.write('\r');
+                        // step = Startup.READY;
+                        // p.write('\r');
+                        this.registerEvents(p);
+                        ex.dispose();
+                        ev.dispose();
                     }
                     break;
-                case Startup.READY:
-                    logger.debug("Current Step: READY");
-                    logger.info(`ssh connection ready.`);
-                    // now we register events
-                    this.registerEvents(p);
-                    p.write('\r');
-                    ev.dispose();
-                    break;
+                // case Startup.READY:
+                //     logger.debug("Current Step: READY");
+                //     logger.info(`ssh connection ready.`);
+                //     // now we register events
+                //     this.registerEvents(p);
+                //     ev.dispose();
+                //     break;
             }
             p.resume();
         });
