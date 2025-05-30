@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=dev tsx watch ./server.ts",
+    "dev": "NODE_ENV=dev LOG_LEVEL=debug tsx watch ./server.ts",
     "build": "tsc",
     "start": "",
     "clean": "rm -rf dist"
