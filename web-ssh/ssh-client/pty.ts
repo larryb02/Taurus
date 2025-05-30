@@ -11,7 +11,10 @@ export class Pty {
 
     constructor(socket: Socket, credentials: Record<string, string>) {
         this._socket = socket;
-        this._ptyProcess = this.startPty(credentials);
+        this._ptyProcess = this.startSession(credentials);
+        if (this._ptyProcess === null) {
+            logger.warn(`Problem creating session`)
+        }
         this.ptyPID = this._ptyProcess.pid;
         logger.debug(`process launched [${this.ptyPID}]`);
     }
@@ -50,55 +53,105 @@ export class Pty {
             logger.error(`Error ${err}`);
         });
     }
-    private startPty(credentials: Record<string, string>): pty.IPty {
-        // 1. create connection string based on parameters
-        // 2. spawn pty using generated command string
-        // 3. if password required manually write it to pty
-        const {user, hostname, pass} = credentials;
+    private startSession(credentials: Record<string, string>): pty.IPty {
+        enum Startup {
+            CONNECTING,
+            SIGN_IN,
+            AUTH_CHECK,
+            READY
+        }
+        // STAGE 1: ATTEMPTING CONNECTION -> HERE WE CHECK FOR CONNECTION ERRORS
+        // STAGE 2: ATTEMPT TO SIGN IN -> MUST CHECK FOR FAILURE HERE AS WELL
+        // STAGE 3: SUCCESS -> CLEANUP EVENTS REGISTERED FOR PTY STARTUP AND REGISTER REGULAR SESSION EVENTS
+
+        const { user, hostname, pass } = credentials;
         logger.debug(`Connecting with session credentials ${JSON.stringify(credentials)}`);
         const con = new SSHConn(user, hostname);
-        // con.build();
-        logger.debug(con.command);
-        let p = pty.spawn("ssh", con.command, {
+        const cmd = con.getCommand();
+        logger.debug(cmd);
+
+        let p = pty.spawn("ssh", cmd, {
             name: 'xterm-color',
             cols: 80,
             rows: 30,
             cwd: process.env.HOME,
             env: process.env
         });
+
         logger.info(`Created new pty process [${p.pid}]`);
-        let registered = false;
+        // let registered: boolean = false;
+        let step: Startup = Startup.CONNECTING;
+        // consider buffering chunks now, and only clear buffer if we move steps
+        let buffer = "";
         const ev = p.onData(chunk => {
-            p.pause();
             logger.debug(`Chunk: ${JSON.stringify(chunk)}`);
-            // Note: this doesn't fully account for all cases yet, must improve
-            if (chunk === "\r") {}
-            else if (chunk.toLowerCase().includes("password:")) {
-                logger.info("User is not signed in. Signing in.");
-                p.write(`${pass}\r`);
-            }
-            else if (!chunk.toLowerCase().includes("permission denied")) { // very hacky, need a robust way to 
-                                                                            // confirm sign in success or failure
-                if (!registered) { // most likely wont need this flag if i parse this properly
-                    logger.debug("Successfully signed in");
+            p.pause();
+            buffer += chunk;
+            logger.debug(`Buffer: ${JSON.stringify(buffer)}`);
+            switch (step) {
+                case Startup.CONNECTING:
+                    // check for connection errors, terminate if necessary
+                    logger.debug("Current Step: CONNECTING");
+                    const err = this.parseForErrors(buffer);
+                    if (err) {
+                        logger.warn(`Connection Failed ${err}`);
+                        p.kill('SIGTERM');
+                        ev.dispose();
+                        return null;
+                    }
+                    // can fail with simple message for now, make verbose later
+                    else {
+                        buffer = "";
+                        step = Startup.SIGN_IN;
+                    }
+                    break;
+                case Startup.SIGN_IN:
+                    // write password to pty (note, logic will definitely change 
+                    //                          once i introduce identity files)
+                    // check that authentication was successful if not terminate session
+                    // (potentially implement retry logic in the future)
+                    logger.debug("Current Step: SIGN IN");
+                    if (buffer === "\r") { } // hmm
+                    if (buffer.toLowerCase().includes("password:")) {
+                        logger.info("User is not signed in. Signing in.");
+                        p.write(`${pass}\r`);
+                    }
+                    buffer = "";
+                    step = Startup.AUTH_CHECK;
+                    break;
+                case Startup.AUTH_CHECK:
+                    // check if it asks for password again
+                    logger.debug("Current Step: AUTH CHECK");
+                    if (buffer.toLowerCase().includes("try")) {
+                        // sign in failed
+                        logger.info("Failed to sign in terminating session.");
+                        p.kill('SIGTERM');
+                    }
+                    if (buffer.toLowerCase().match(/[$#]\s*$/)) {
+                        logger.info("Authentication successful. Entering shell.");
+                        buffer = "";
+                        step = Startup.READY;
+                        p.write('\r');
+                    }
+                    break;
+                case Startup.READY:
+                    logger.debug("Current Step: READY");
+                    logger.info(`ssh connection ready.`);
+                    // now we register events
                     this.registerEvents(p);
-                    registered = true;
-                    ev.dispose(); // this is most likely the problem, should not dispose of this event until i've confirmed success
-                }
-            }
-            else { // this will not execute properly until i fix the above ^
-                // just terminate session for now tell user to try again
-                logger.warn("Password is incorrect");
-                // p.kill();
+                    p.write('\r');
+                    ev.dispose();
+                    break;
             }
             p.resume();
         });
 
-        p.onExit(() => {
-            logger.debug("Too many failed attempts connection closed.");
-            // this._socket.emit("sessionTerminated");
-        })
-
+        const ex = p.onExit(() => {
+            logger.error("Something went wrong, terminating session");
+            this._socket.emit("sessionTerminated");
+            ex.dispose();
+            ev.dispose();
+        });
         return p;
     }
 
