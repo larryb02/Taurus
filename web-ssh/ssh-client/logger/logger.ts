@@ -3,7 +3,7 @@ const require = createRequire(import.meta.url);
 
 const pino = require('pino');
 
-const debugLevel = process.env.NODE_ENV === "dev" ? "debug" : "info";
+const debugLevel = process.env.LOG_LEVEL !== undefined ? process.env.LOG_LEVEL : "info";
 const transports = [{
         target: 'pino-pretty',
         options: {
@@ -18,6 +18,6 @@ const transports = [{
 
 export const logger = pino({
     name: "logger",
-    level: "debug",
+    level: debugLevel,
     transport: process.env.NODE_ENV === "dev" ? transports[0] : transports[1]
 });
