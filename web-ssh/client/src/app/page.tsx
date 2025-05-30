@@ -43,7 +43,7 @@ export default function session() {
             });
 
             term.onData(data => {
-                console.log(`sending input event: ${data}`);
+                console.log(`sending input event: ${JSON.stringify(data)}`);
                 socket.emit("terminal:input", data);
             });
 
@@ -80,19 +80,19 @@ export default function session() {
     }, [sessionStarted]);
 
     function startSession() {
-        // if (destination === "") {
-        //     console.log(`destination cannot be empty.`);
-        //     // render an error here
-        //     return;
-        // }
+        for (const key in sshConnectionData) {
+            if (sshConnectionData[key] === "") {
+                console.warn(`${key} cannot be empty.`);
+                return;
+            }
+        }
         setIsLoading(true);
         console.log(`Connecting with session credentials:\n`);
         for (const key in sshConnectionData) {
             console.log(`${key}:${sshConnectionData[key]}`);
         }
-        // console.log(`Connecting with session credentials ${sshConnectionData}`);
         setSessionStarted(true);
-        setIsLoading(false);
+        setIsLoading(false); // will be moved once sign-in is ironed out
     }
 
     if (isLoading) {
