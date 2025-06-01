@@ -1,0 +1,14 @@
+.header {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-bottom: 1px solid red;
+}
+
+.title {
+    font-size: medium;
+}
+
+.add_connections {
+    position: absolute;
+    right: 5px
+}
