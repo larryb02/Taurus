@@ -1,11 +1,13 @@
 "use client";
-// import Terminal from "../components/Terminal";
-// import { Terminal } from '@xterm/xterm';
+
 import '@xterm/xterm/css/xterm.css';
 import { useState, useEffect } from "react";
 import { socket } from '../socket';
 import Terminal from '../components/Terminal';
 import Header from '../components/Header'
+import Sidebar from '../components/Sidebar'
+import termView from '../styles/terminal.module.css'
+import page from './page.module.css'
 
 
 export default function session() {
@@ -110,9 +112,12 @@ export default function session() {
 
     if (sessionStarted) {
         return (
-            <div>
+            <div className={page.top_level}>
                 <Header />
-                <Terminal sshConnectionData={sshConnectionData} sessionStarted={sessionStarted} />
+                <div className={page.page}>
+                    <Sidebar />
+                    <Terminal sshConnectionData={sshConnectionData} sessionStarted={sessionStarted} />
+                </div>
             </div> // passing sessionstarted is just a hack for now
             // <div>
             //     <div id="terminal"></div>
@@ -121,21 +126,26 @@ export default function session() {
     }
 
     return (
-        <div>
+        <div className={page.top_level}>
             <Header />
-            <label>Username</label>
-            <input type="text" onChange={(e) => {
-                setSshConnectionData({ ...sshConnectionData, "user": e.target.value });
-            }}></input>
-            <label>Hostname</label>
-            <input type="text" onChange={(e) => { setSshConnectionData({ ...sshConnectionData, "hostname": e.target.value }); }}></input>
-            <label>Password</label>
-            <input type="password" onChange={(e) => {
-                setSshConnectionData({ ...sshConnectionData, "pass": e.target.value });
-            }}></input>
-            <button onClick={() => {
-                startSession();
-            }}>Submit</button>
+            <div className={page.page}>
+                <Sidebar />
+                <div className={termView.terminal_view}>
+                    <label>Username</label>
+                    <input type="text" onChange={(e) => {
+                        setSshConnectionData({ ...sshConnectionData, "user": e.target.value });
+                    }}></input>
+                    <label>Hostname</label>
+                    <input type="text" onChange={(e) => { setSshConnectionData({ ...sshConnectionData, "hostname": e.target.value }); }}></input>
+                    <label>Password</label>
+                    <input type="password" onChange={(e) => {
+                        setSshConnectionData({ ...sshConnectionData, "pass": e.target.value });
+                    }}></input>
+                    <button onClick={() => {
+                        startSession();
+                    }}>Submit</button>
+                </div>
+            </div>
         </div>
     )
 }

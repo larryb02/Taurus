@@ -4,6 +4,7 @@ import '@xterm/xterm/css/xterm.css';
 import { useEffect, useState } from 'react';
 // import { io, Socket } from 'socket.io-client';
 import { socket } from '../socket';
+import termView from '../styles/terminal.module.css'
 
 export default function terminal({ sshConnectionData, sessionStarted }) { // need to resolve naming conflicts...
   useEffect(() => {
@@ -73,7 +74,7 @@ export default function terminal({ sshConnectionData, sessionStarted }) { // nee
 
 
   return (
-    <div>
+    <div className={termView.terminal_view}>
       <div id="terminal"></div>
     </div>
   );
