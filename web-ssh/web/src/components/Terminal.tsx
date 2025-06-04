@@ -1,15 +1,21 @@
 "use client";
 import { Terminal } from '@xterm/xterm';
 import '@xterm/xterm/css/xterm.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 // import { io, Socket } from 'socket.io-client';
 import { socket } from '../socket';
 import termView from '../styles/terminal.module.css'
 
-export default function terminal({ sshConnectionData, sessionStarted }) { // need to resolve naming conflicts...
+interface terminalProps {
+    sshConnectionData: Record<string, string>;
+    sessionStarted: boolean;
+
+}
+
+export default function terminal({ sshConnectionData, sessionStarted }: terminalProps) { // need to resolve naming conflicts...
   useEffect(() => {
         // note add a case if connection to socket fails
-        let term = null;
+        let term: Terminal | null = null;
         if (sessionStarted) {
             term = new Terminal();
             console.log(`New terminal instance created`);
@@ -41,7 +47,7 @@ export default function terminal({ sshConnectionData, sessionStarted }) { // nee
 
             socket.on("pty:output", (chunk) => {
                 console.log("Received data from pty", chunk);
-                term.write(chunk);
+                term?.write(chunk);
             });
 
             socket.on("sessionTerminated", () => {
@@ -53,8 +59,8 @@ export default function terminal({ sshConnectionData, sessionStarted }) { // nee
             //     setSessionStarted(false);
             // });
 
-            socket.on("error", (err) => {
-
+            socket.on("error", (err: any) => {
+                console.error(err);
             });
 
             socket.connect();

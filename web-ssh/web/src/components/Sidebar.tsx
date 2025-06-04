@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from '../styles/sidebar.module.css'
 
 export default function Sidebar() {
-    const [recentConnections, setRecentConnections] = useState([]);
+    const [recentConnections, setRecentConnections] = useState(['conn1', 'conn2']);
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     return (<div className={isCollapsed ? styles.sidebar_collapsed : styles.sidebar}>
@@ -10,7 +10,8 @@ export default function Sidebar() {
             setIsCollapsed(!isCollapsed);
             // console.log(isCollapsed)
         }}>Collapsable button</button></div>
-        <div>Manage Connections</div>
-        <div>Recent Connection 1</div>
+        {recentConnections.map((item) => 
+            <div>{item}</div>
+        )}
     </div>);
 }

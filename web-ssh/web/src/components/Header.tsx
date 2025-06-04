@@ -1,5 +1,3 @@
-import { useRef, useReducer } from "react";
-import ConnectionForm from './ConnectionForm';
 import styles from '../styles/header.module.css'
 import buttons from '../styles/buttons.module.css'
 
