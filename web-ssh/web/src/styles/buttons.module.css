@@ -1,0 +1,9 @@
+.default_button {
+    width: 250px;
+    height: 40px;
+    /* cursor: pointer; */
+}
+
+.default_button:hover {
+    /* background-color: blue; */
+}
