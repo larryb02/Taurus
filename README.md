@@ -7,19 +7,18 @@ Aiming to provide a modern experience to remote-based terminal workflows. (Name 
 - Basic SSH connection
 
 ## Architecture
-This application currently consists of two core components (Updating as I go):  
+This application currently consists of three core components (Updating as I go):  
 ### SSH Client:
 Manages terminal sessions 
 - Spawns a pty process 
 - Creates ssh connection
 - Streams i/o to client via websocket
 ### Web Client:
-User facing part of the application 
 - Initiates SSH session through SSH client
 - Displays terminal output and captures user input
 ### REST API:
 - Auth
-- Manage ssh connection information (fetch, create, delete, etc) 
+- Manage ssh config (fetch, create, delete, etc) 
 <!-- - Insert UML diagram here -->
 ### Planned Components
 This section outlines future components that are actively being built or have been planned for future development.
