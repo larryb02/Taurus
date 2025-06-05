@@ -1,12 +1,12 @@
 import styles from '../styles/ConnectionForm.module.css'
 
 interface ConnectionFormProps {
-  startSession: () => void;
+  createConnection: () => void;
   updateSshConnectionField: (field: string, value: string) => void;
 }
 
 export default function ConnectionForm({ 
-    startSession, 
+    createConnection, 
     updateSshConnectionField 
 } : ConnectionFormProps) {
     return <div className={styles.connection_form}>
@@ -29,7 +29,7 @@ export default function ConnectionForm({
             }}></input>
         </div>
         <div className={styles.connection_form_item}>
-            <button onClick={startSession}>Submit</button>
+            <button onClick={createConnection}>Submit</button>
         </div>
     </div>;
 }
