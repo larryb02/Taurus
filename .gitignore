@@ -33,6 +33,7 @@ node-pty
 *.pem
 logger.bak
 **/*.bak
+**/.old
 
 # debug
 npm-debug.log*
