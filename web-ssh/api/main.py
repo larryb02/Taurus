@@ -1,8 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from api import router as api_router
 
-
-app = FastAPI(title="API", version="0.0")
+app = FastAPI(
+    title="[ssh client] REST API",
+    summary="REST API for [name to be determined]",
+    version="0.0.0",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc"
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -12,6 +18,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get('/')
-def hello_world():
-    return "Hello World!"
+app.include_router(api_router)
