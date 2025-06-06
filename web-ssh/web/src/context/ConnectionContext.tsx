@@ -30,9 +30,9 @@ export const ConnectionsProvider: React.FC<Props> = ({ children }) => {
     }
 
     return (
-        <ConnectionsContext.Provider value={{connections, addConnection}}>
+        <ConnectionsContext value={{connections, addConnection}}>
             {children}
-        </ConnectionsContext.Provider>
+        </ConnectionsContext>
     );
 };
 
