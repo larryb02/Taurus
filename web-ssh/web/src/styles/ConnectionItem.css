@@ -1,0 +1,11 @@
+.connection_item {
+    margin: 4px;
+    border: solid 1px white;
+    border-radius: 8px;
+    width: 150px;
+    height: 100px;
+}
+
+.connection_item:hover {
+    border-color: #646cff;
+}
