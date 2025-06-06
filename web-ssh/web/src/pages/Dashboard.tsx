@@ -1,54 +1,49 @@
 import { useState } from "react";
-import { socket } from '../socket';
-import Terminal from '../components/Terminal';
+// import { socket } from '../socket';
+import buttons from '../styles/buttons.module.css'
+// import Terminal from '../components/Terminal';
 import Header from '../components/Header'
 import Sidebar from '../components/Sidebar'
 import page from '../page.module.css'
-
+import ConnectionForm from "../components/ConnectionForm";
+import ConnectionItem from "../components/ConnectionItem";
+import { useConnectionsContext } from "../context/ConnectionContext";
 
 export default function Dashboard() {
     // Get all connections from db and render
     // when user clicks a connection, trigger a new ssh session
-        // eventually this will also have options to delete etc
-    const [isLoading, setIsLoading] = useState(false);
-    const [sessionStarted, setSessionStarted] = useState(false);
+    // eventually this will also have options to delete etc
 
-    function startSession() {
-        
-        setIsLoading(true);
-        console.log(`Connecting with session credentials:\n`);
-        setSessionStarted(true);
-        setIsLoading(false); // will be moved once sign-in is ironed out
-        socket.on("disconnect", (reason) => {
-            console.log(`Disconnected from socket ${socket.id}\nReason: ${reason}`);
-            setSessionStarted(false);
-        }); // another hack, gonna rewrite tf out of this code just need terminal in a component for now
-    }
+    const [isAddingConnection, setIsAddingConnection] = useState<boolean>(false); // add connection button
+    const { connections } = useConnectionsContext();
 
-    if (isLoading) {
-        return (<div>Loading!!!</div>);
-    }
-
-
-    if (sessionStarted) {
+    if (isAddingConnection) {
+        // we'll do some css magic here -> like a nice animation to render a panel
+        // but for now we'll do this
         return (
             <div className={page.top_level}>
                 <Header />
-                <div className={page.page}>
-                    <Sidebar />
-                    {/* <Terminal sshConnectionData={sshConnectionData} sessionStarted={sessionStarted} /> */}
-                </div>
-            </div> 
-        );
+                {/* <ConnectionsProvider> */}
+                    <ConnectionForm setIsAddingConnection={setIsAddingConnection} />
+                {/* </ConnectionsProvider> */}
+            </div>
+        )
     }
 
     return (
-        <div className={page.top_level}>
-            <Header />
-            <div className={page.page}>
-                {/* <Sidebar /> */}
-                Connections go here
+        // <ConnectionsProvider>
+            <div className={page.top_level}>
+                <Header />
+                <button className={buttons.default_button} onClick={() => {
+                    setIsAddingConnection(true);
+                }}>New Connection</button>
+                <div className={page.page}>
+                    {/* <Sidebar /> */}
+                    {connections.map((item) =>
+                        <ConnectionItem connection={item}/>
+                    )}
+                </div>
             </div>
-        </div>
+        // </ConnectionsProvider>
     );
 }
