@@ -11,10 +11,10 @@ export default function TerminalView() {
 
     const { getActiveSession } = useSessionsContext();
     const session = getActiveSession();
-    if (!session) {
-        throw new Error("Active session is null"); // seems pretty hacky i will need to find a workaround, 
-                                                    // but in theory this **should** never happen.
-    }
+    // if (!session) {
+    //     throw new Error("Active session is null"); // seems pretty hacky i will need to find a workaround, 
+    //                                                 // but in theory this **should** never happen.
+    // }
     const { label, user, host } = session;
     return (
         <div className={page.top_level}>
