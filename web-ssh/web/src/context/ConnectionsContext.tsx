@@ -2,7 +2,7 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 import type { Connection } from "../types";
 
 type Props = {
-  children: ReactNode;
+    children: ReactNode;
 };
 
 interface ConnectionContextInterface {
@@ -12,25 +12,19 @@ interface ConnectionContextInterface {
 
 const ConnectionsContext = createContext<ConnectionContextInterface | null>(null);
 
-export const ConnectionsProvider: React.FC<Props> = ({ children }) => {
+export const ConnectionsContextProvider: React.FC<Props> = ({ children }) => {
     const [connections, setConnections] = useState<Connection[]>([
-        {
-            label: "test-server-1",
-            host: "testvm1",
-            user: "yo"
-        },
-        {
-            label: "prod-server-1",
-            host: "prodvm1",
-            user: "yo"
-        }]);
-        
+            { label: "test-server-1", host: "testvm1", user: "yo" },
+            { label: "prod-server-1", host: "prodvm1", user: "yo" },
+        ]);
+
+
     function addConnection(conn: Connection) {
-        setConnections(old => [...old, conn]);
+        setConnections(prev => [...prev, conn]);
     }
 
     return (
-        <ConnectionsContext value={{connections, addConnection}}>
+        <ConnectionsContext value={{ connections, addConnection }}>
             {children}
         </ConnectionsContext>
     );
