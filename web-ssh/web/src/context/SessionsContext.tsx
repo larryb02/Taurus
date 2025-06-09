@@ -29,7 +29,7 @@ export const SessionsContextProvider: React.FC<Props> = ({ children }) => {
     );
 }
 
-export function useSessionsContext() {
+export const useSessionsContext = () => {
     const ctx = useContext(SessionsContext);
 
     if (!ctx) {

@@ -15,7 +15,7 @@ function App() {
             <Route path="session" element={<TerminalView />} />
           </Routes>
         </Router>
-        </SessionsContextProvider>
+      </SessionsContextProvider>
     </ConnectionsContextProvider>
   );
 }

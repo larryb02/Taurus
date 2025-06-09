@@ -1,7 +1,6 @@
 import styles from '../styles/ConnectionForm.module.css';
 import { useConnectionsContext } from '../context/ConnectionsContext';
 import { useState } from 'react';
-import type { Connection } from '../types';
 
 interface ConnectionFormProps {
     setIsAddingConnection: (value: boolean) => void;
