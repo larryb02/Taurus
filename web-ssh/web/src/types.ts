@@ -1,6 +1,6 @@
 export interface Connection {
     label: string;
-    host: string;
+    hostname: string;
     user: string;
     // pass: string;
 }
