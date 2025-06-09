@@ -14,7 +14,7 @@ export default function TerminalView() {
     const { getActiveSession } = useSessionsContext();
     const session = getActiveSession();
 
-    const { label, user, host } = session;
+    const { label, user, hostname } = session;
     return (
         <div className={page.top_level}>
             <Header />
@@ -24,7 +24,7 @@ export default function TerminalView() {
                     <Terminal sshConnectionData={{
                         "label": label,
                         "user": user,
-                        "hostname": host,
+                        "hostname": hostname,
                         "pass": "password"
                     }} sessionStarted={true} />
                 </div>

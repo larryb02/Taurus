@@ -13,6 +13,7 @@ def get_all_connections():
     connections = f.read()
     f.close()
     res = json.loads(connections)
+    # print(f"'results':{res}")
     return {"results": res}
 
 
@@ -37,7 +38,7 @@ def create_connection(conn: SSHConn):
     conn = {
         "label": conn.label,
         "hostname": conn.hostname,
-        "username": conn.username,
+        "user": conn.user,
         "password": conn.password,
     }
     f = open("db.json", "r")
