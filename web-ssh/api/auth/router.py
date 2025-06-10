@@ -3,6 +3,6 @@ from fastapi import APIRouter
 router = APIRouter(prefix="/auth")
 
 
-@router.get("/test")
-def auth_hello_world():
+@router.post("/create")
+def create_account():
     return "Hello from /auth!"
