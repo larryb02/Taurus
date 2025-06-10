@@ -24,6 +24,9 @@ export default function Dashboard() {
                 const res = await fetch(`${API_HOST}/ssh/connection`);
                 // console.log(res);
                 const json = await res.json();
+                if (!res.ok) {
+                    throw new Error(`Failed to fetch ssh connections: ${res.status}, ${res.statusText}`);
+                }
                 setConnections(json["results"]);
             } catch (error) {
                 throw new Error(`Failed to fetch connections ${error}`);
