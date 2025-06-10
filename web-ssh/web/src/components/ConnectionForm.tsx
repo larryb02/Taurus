@@ -1,6 +1,8 @@
 import styles from '../styles/ConnectionForm.module.css';
 import { useConnectionsContext } from '../context/ConnectionsContext';
 import { useState } from 'react';
+import { config } from '../config'
+import { updateField } from '../utils';
 
 interface ConnectionFormProps {
     setIsAddingConnection: (value: boolean) => void;
@@ -19,32 +21,33 @@ export default function ConnectionForm({
         "hostname": ""
     });
 
-    const updateConnectionField = (field: string, value: string) => {
-        setConnectionData({ ...connectionData, [field]: value });
-        console.log(connectionData);
-    }
+    // const updateConnectionField = (field: string, value: string) => {
+    //     setConnectionData({ ...connectionData, [field]: value });
+    //     console.log(connectionData);
+    // }
 
-    const onNewConnection = async (conn: Record<string, string>) => {
-        const API_HOST = "http://localhost:8000/api";
+    const createNewConnection = async (conn: Record<string, string>) => {
         console.log(`Adding new connection to db ${JSON.stringify(conn)}`);
         try {
-            let res = await fetch(`${API_HOST}/ssh/connection`, {
+            let res = await fetch(`${config.api.url}${config.api.routes.ssh.connection}`, {
                 method: "POST",
                 body: JSON.stringify(conn),
                 headers: {
                     "content-type": "application/json"
                 }
-            })
+            });
 
-            res = await res.json();
             if (!res.ok) {
                 throw new Error(`Something went wrong ${res.status}, ${res.statusText}`)
             }
+
+            res = await res.json();
+
             addConnection({
                 label: connectionData.label,
                 hostname: connectionData.hostname,
                 user: connectionData.user
-                }
+            }
             );
             console.log(res);
         } catch (error) {
@@ -58,25 +61,25 @@ export default function ConnectionForm({
         <div className={styles.connection_form_item}>
             <label>Label</label>
             <input type="text" onChange={(e) => {
-                updateConnectionField("label", e.target.value);
+                updateField(connectionData, setConnectionData, "label", e.target.value);
             }}></input>
         </div>
         <div className={styles.connection_form_item}>
             <label>Username</label>
             <input type="text" onChange={(e) => {
-                updateConnectionField("user", e.target.value);
+                updateField(connectionData, setConnectionData, "user", e.target.value);
             }}></input>
         </div>
         <div className={styles.connection_form_item}>
             <label>Hostname</label>
             <input type="text" onChange={(e) => {
-                updateConnectionField("hostname", e.target.value);
+                updateField(connectionData, setConnectionData, "hostname", e.target.value);
             }}></input>
         </div>
         <div className={styles.connection_form_item}>
             <label>Password</label>
             <input type="password" onChange={(e) => {
-                updateConnectionField("password", e.target.value);
+                updateField(connectionData, setConnectionData, "password", e.target.value);
             }}></input>
         </div>
         <div className={styles.connection_form_item}>
@@ -84,7 +87,7 @@ export default function ConnectionForm({
                 console.log("Connection created");
                 // addConnection({ label: connectionData.label, host: connectionData.hostname, user: connectionData.user });
                 // should also store in db
-                onNewConnection(connectionData);
+                createNewConnection(connectionData);
                 setIsAddingConnection(false);
             }}>Submit</button>
         </div>
