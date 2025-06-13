@@ -1,6 +1,6 @@
 from typing import Annotated
 from sqlalchemy import create_engine, URL
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, DeclarativeBase
 from fastapi import Depends
 
 db_dialect = "postgresql"
@@ -20,16 +20,21 @@ db_url = URL.create(
     database=db_db
 )
 
-engine = create_engine(db_url, echo=True)
+engine = create_engine(db_url, echo="debug")
 
 def get_session():
     with Session(engine) as session:
         # yield session
         try:
             yield session
+            # session.commit()
         except:
             session.rollback()
+            raise
         finally:
             session.close()
 
 DbSession = Annotated[Session, Depends(get_session)]
+
+class Base(DeclarativeBase):
+    pass
