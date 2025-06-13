@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+# from starlette.middleware.sessions import SessionMiddleware
+from starsessions import SessionMiddleware, InMemoryStore, SessionAutoloadMiddleware
 from api import router as api_router
 
 app = FastAPI(
@@ -17,5 +19,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(SessionAutoloadMiddleware)
+app.add_middleware(SessionMiddleware, store=InMemoryStore())
 
 app.include_router(api_router)
