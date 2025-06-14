@@ -1,11 +1,10 @@
 # from db.service import DbSession
 from sqlalchemy import insert, select
-
 from fastapi import Request
 from .models import User, UserAccount
 from db.core import DbSession
+import bcrypt
 
-# from pydantic import ValueError
 
 def get_current_user(request: Request):
     if request.session.get("user_id"):
@@ -14,7 +13,7 @@ def get_current_user(request: Request):
     else:
         print("No user signed in")
         return None
-    
+
 
 def get_user(user: User, dbsession: DbSession):
     stmt = select(
@@ -32,12 +31,19 @@ def get_user(user: User, dbsession: DbSession):
         raise
 
 
+def hash_password(password: str):
+    to_bytes = password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(to_bytes, salt)
+
 def create_user(user: User, dbsession: DbSession) -> dict:
-    # TODO validate input and hash passwords
+    # TODO validate input
+
+    hashed_pw = hash_password(user.password)
     stmt = (
         insert(UserAccount)
         .values(
-            email_address=user.email, username=user.username, password=user.password
+            email_address=user.email, username=user.username, password=hashed_pw
         )
         .returning(
             UserAccount.user_id,
@@ -56,19 +62,17 @@ def create_user(user: User, dbsession: DbSession) -> dict:
         raise
 
 
-def validate(expected, input) -> bool:
-    return expected == input
-
-
 def login_user(user: dict, input_password: str):
     # validate credentials
     # print(user)
     expected_password = user["password"]
-    success = expected_password == input_password
+    success = bcrypt.checkpw(input_password.encode("utf-8"), expected_password)
     if success:
         return user["user_id"]  # will be stored in a session object
     else:
         raise ValueError("Incorrect credentials")
 
+
 def logoff_user(request: Request) -> None:
     request.session.clear()
+    # redirect once we get to that part, for now will probably just redirect on client
