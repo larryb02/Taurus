@@ -23,5 +23,5 @@ class UserAccount(Base):
     user_id: Mapped[int] = mapped_column(primary_key=True)
     email_address: Mapped[str] = mapped_column(String(100), unique=True)
     username: Mapped[str] = mapped_column(String(50))
-    password: Mapped[str] = mapped_column(LargeBinary())
+    password: Mapped[bytes] = mapped_column(LargeBinary())
     created_at: Mapped[datetime] = mapped_column(DATETIME, default=datetime.now())
