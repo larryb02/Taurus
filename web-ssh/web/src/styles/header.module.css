@@ -2,19 +2,11 @@
     /* margin-bottom: 20px; */
     padding: 20px;
     border-bottom: 1px solid white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .title {
     font-size: medium;
 }
-
-.add_connections {
-    margin: calc(100vw - 300px);
-    /* position: absolute; */
-    /* right: 5px */
-}
-
-/* .header button {
-    position: absolute;
-    right: 0;
-} */
