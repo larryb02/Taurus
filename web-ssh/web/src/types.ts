@@ -5,3 +5,9 @@ export interface Connection {
     user: string;
     // pass: string;
 }
+
+export interface User {
+    userId: number;
+    email: string;
+    username: string;
+}

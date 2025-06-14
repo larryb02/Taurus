@@ -1,29 +1,32 @@
 import { useState } from "react";
 import { updateField } from "../utils";
 import { config } from "../config";
+import { useNavigate } from "react-router-dom";
+import '../styles/Login.css';
 
-interface UserForm {
-    username: string;
-    // email: string;
+interface UserLoginForm {
+    email: string;
     password: string;
 }
 
 interface NewUserForm {
+    emailAddress: string;
     username: string;
-    // email: string;
     password: string;
     confirmPassword: string;
 }
 
 export default function Login() {
-    const [userData, setUserData] = useState<UserForm>({
-        username: "",
+    let navigate = useNavigate();
+    const [userData, setUserData] = useState<UserLoginForm>({
+        email: "",
         password: ""
     });
 
     const [isCreatingAccount, setIsCreatingAccount] = useState<boolean>(false);
 
     const [newUserData, setNewUserData] = useState<NewUserForm>({
+        emailAddress: "",
         username: "",
         password: "",
         confirmPassword: ""
@@ -34,10 +37,14 @@ export default function Login() {
             const res = await fetch(`${config.api.url}${config.api.routes.auth.login}`,
                 {
                     method: "POST",
-                    body: JSON.stringify(userData),
+                    body: JSON.stringify({
+                        "email_or_user": userData.email,
+                        "password": userData.password
+                    }),
                     headers: {
                         "content-type": "application/json"
-                    }
+                    },
+                    credentials: "include"
                 }
             );
 
@@ -49,6 +56,16 @@ export default function Login() {
 
             const data = await res.json();
             console.log(data);
+            // try {
+            //     const res = await fetch(`${config.api.url}${config.api.routes.auth.user}`, {
+            //         credentials: "include"
+            //     });
+            //     const json = await res.json();
+            //     console.log(json);
+            //     // return json;
+            // } catch (error) {
+            //     throw new Error(`Failed to fetch ${error}`);
+            // }
 
         } catch (error) {
             throw new Error(`Failed to fetch: {
@@ -56,9 +73,15 @@ export default function Login() {
                 Error: ${error}}`
             );
         }
+
+        navigate("/dashboard");
     }
 
     const createAccount = async () => {
+        if (newUserData.password !== newUserData.confirmPassword) {
+            console.log("Passwords do not match.");
+            return;
+        }
         try {
             const res = await fetch(`${config.api.url}${config.api.routes.auth.create}`,
                 {
@@ -87,55 +110,64 @@ export default function Login() {
         }
     }
 
-if (isCreatingAccount) {
+    if (isCreatingAccount) {
+        return (
+            <div>
+                <button onClick={() => setIsCreatingAccount(false)}>Return</button>
+                <div className="login-field">
+                    {/* <label>Username</label> */}
+                    <input type="text" placeholder="Email" onChange={
+                        (e) => updateField(userData, setUserData, "email", e.target.value)
+                    }>
+                    </input>
+                </div>
+                <div>
+                    <label>Username</label>
+                    <input type="text" onChange={
+                        (e) => updateField(newUserData, setNewUserData, "username", e.target.value)
+                    }>
+                    </input>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" onChange={
+                        (e) => updateField(newUserData, setNewUserData, "password", e.target.value)
+                    }>
+                    </input>
+                </div>
+                <div>
+                    <label>Confirm Password</label>
+                    <input type="password" onChange={
+                        (e) => updateField(newUserData, setNewUserData, "confirmPassword", e.target.value)
+                    }>
+                    </input>
+                </div>
+                <button onClick={() => createAccount()}>Create</button>
+            </div>
+        );
+    }
     return (
-        <div>
-            <button onClick={() => setIsCreatingAccount(false)}>Return</button>
-            <div>
-                <label>Username</label>
-                <input type="text" onChange={
-                    (e) => updateField(newUserData, setNewUserData, "username", e.target.value)
-                }>
-                </input>
+        <div className="login-page">
+            <div className="login-form">
+                <div className="login-field">
+                    {/* <label>Username</label> */}
+                    <input type="text" placeholder="Email Address" onChange={
+                        (e) => updateField(userData, setUserData, "email", e.target.value)
+                    }>
+                    </input>
+                </div>
+                <div className="login-field">
+                    {/* <label>Password</label> */}
+                    <input type="password" placeholder="Password" onChange={
+                        (e) => updateField(userData, setUserData, "password", e.target.value)
+                    }>
+                    </input>
+                </div>
+                <div>
+                    <button onClick={() => setIsCreatingAccount(true)}>Create Account</button>
+                    <button onClick={() => signIn()}>Sign In</button>
+                </div>
             </div>
-            <div>
-                <label>Password</label>
-                <input type="password" onChange={
-                    (e) => updateField(newUserData, setNewUserData, "password", e.target.value)
-                }>
-                </input>
-            </div>
-            <div>
-                <label>Confirm Password</label>
-                <input type="password" onChange={
-                    (e) => updateField(newUserData, setNewUserData, "confirmPassword", e.target.value)
-                }>
-                </input>
-            </div>
-            <button onClick={() => createAccount()}>Create</button>
         </div>
     );
-}
-return (
-    <div>
-        <div>
-            <label>Username</label>
-            <input type="text" onChange={
-                (e) => updateField(userData, setUserData, "username", e.target.value)
-            }>
-            </input>
-        </div>
-        <div>
-            <label>Password</label>
-            <input type="password" onChange={
-                (e) => updateField(userData, setUserData, "password", e.target.value)
-            }>
-            </input>
-        </div>
-        <div>
-            <button onClick={() => setIsCreatingAccount(true)}>Create Account</button>
-            <button onClick={() => signIn()}>Sign In</button>
-        </div>
-    </div>
-);
 }

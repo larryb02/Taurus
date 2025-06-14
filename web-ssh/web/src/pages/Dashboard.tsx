@@ -3,9 +3,13 @@ import buttons from '../styles/buttons.module.css'
 import Header from '../components/Header'
 import Sidebar from '../components/Sidebar'
 import page from '../page.module.css'
+import '../styles/Dashboard.css'
 import ConnectionForm from "../components/ConnectionForm";
 import ConnectionItem from "../components/ConnectionItem";
 import { useConnectionsContext } from "../context/ConnectionsContext";
+import { useUserContext } from "../context/UserContext";
+import { config } from "../config";
+import { type User } from "../types";
 
 
 export default function Dashboard() {
@@ -15,13 +19,39 @@ export default function Dashboard() {
 
     const [isAddingConnection, setIsAddingConnection] = useState<boolean>(false); // add connection button
     const { connections, setConnections } = useConnectionsContext();
+    const { setCurrentUser } = useUserContext();
 
     useEffect(() => {
-        const API_HOST = "http://localhost:8000/api";
-        
+        const fetchUser = async () => {
+            console.log(`Starting Fetch: ${config.api.url}${config.api.routes.auth.user}`);
+            try {
+                const res = await fetch(`${config.api.url}${config.api.routes.auth.user}`, {
+                    credentials: "include"
+                });
+                const json = await res.json();
+                console.log(json);
+
+                const user: User = {
+                    userId: json['result']['user_id'],
+                    email: json['result']['email_address'],
+                    username: json['result']['username']
+                };
+
+                setCurrentUser(user);
+                // return json;
+            } catch (error) {
+                throw new Error(`Failed to fetch ${error}`);
+            }
+        }
+        console.log(`Fetch for ${config.api.url}${config.api.routes.auth.user} complete`)
+        fetchUser();
+    }, []);
+
+    useEffect(() => {
+        console.log(`Starting Fetch: ${config.api.url}${config.api.routes.ssh.connection}`);
         (async () => {
             try {
-                const res = await fetch(`${API_HOST}/ssh/connection`);
+                const res = await fetch(`${config.api.url}${config.api.routes.ssh.connection}`);
                 // console.log(res);
                 const json = await res.json();
                 if (!res.ok) {
@@ -32,11 +62,12 @@ export default function Dashboard() {
                 throw new Error(`Failed to fetch connections ${error}`);
             }
         })();
-
+        console.log(`Fetch for ${config.api.url}${config.api.routes.ssh.connection} complete`)
         return () => {
 
         }
     }, []);
+
     if (isAddingConnection) {
         // we'll do some css magic here -> like a nice animation to render a panel
         // but for now we'll do this
@@ -52,7 +83,7 @@ export default function Dashboard() {
 
     return (
         // <ConnectionsProvider>
-        <div className={page.top_level}>
+        <div className="dashboard">
             <Header />
             <button className={buttons.default_button} onClick={() => {
                 setIsAddingConnection(true);
