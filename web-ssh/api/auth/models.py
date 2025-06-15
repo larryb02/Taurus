@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from db.core import Base
+from ..db.core import Base
 from sqlalchemy import String, DATETIME, LargeBinary
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional

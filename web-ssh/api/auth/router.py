@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Request
-from db.core import DbSession
+from ..db.core import DbSession
 from .service import (
     create_user,
     login_user,

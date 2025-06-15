@@ -2,7 +2,7 @@
 from sqlalchemy import insert, select
 from fastapi import Request
 from .models import User, UserAccount
-from db.core import DbSession
+from ..db.core import DbSession
 import bcrypt
 
 
