@@ -1,7 +1,7 @@
 import header from '../styles/header.module.css' // note this will no longer be a module
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../context/UserContext';
-
+import ProfileCard from './ProfileCard';
 
 export default function Header() {
     const { currentUser } = useUserContext();
@@ -10,7 +10,8 @@ export default function Header() {
         <span className={header.title}>Alpha</span>
         <span className={header.profileCard}>
             {currentUser !== null &&
-                <div>{currentUser.username}</div>
+                // <div>{currentUser.username}</div>
+                <ProfileCard currentUser={currentUser}/>
                 ||
                 <button onClick={() => nav("/login")}>Log In</button>
             }

@@ -4,6 +4,7 @@ export const config = {
         routes: {
             auth: {
                 login: "/auth/login",
+                logoff:"/auth/logoff",
                 user: "/auth/user"
             },
             ssh: {
