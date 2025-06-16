@@ -4,7 +4,6 @@ export const config = {
         routes: {
             auth: {
                 login: "/auth/login",
-                create: "/auth/create",
                 user: "/auth/user"
             },
             ssh: {
