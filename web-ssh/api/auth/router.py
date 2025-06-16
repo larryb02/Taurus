@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import RedirectResponse
 from ..db.core import DbSession
 from .service import (
     create_user,
@@ -15,16 +16,16 @@ from .models import User, UserLogin
 router = APIRouter(prefix="/auth")
 
 
-@router.post("/create")
+@router.post("/user")
 def create_account(user: User, session: DbSession):
-    user_acc = get_user_by_email(user, session)
+    user_acc = get_user_by_email(user.email, session)
     if user_acc:
         raise HTTPException(
             status_code=403, detail="User with this email already exists"
         )
     try:
         res = create_user(user, session)
-        return res
+        return {"result": "Sucessfully created user"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to process request: {e}")
 
@@ -60,7 +61,9 @@ def get_signed_in_user(session: DbSession, request: Request):
     user_id = get_current_user(
         request
     )  # get user_id from session object, should probly safeguard incase somehow signed out
-    if user_id: # this nesting is probably unecessary, unless an account got deleted or something crazy edge case
+    if (
+        user_id
+    ):  # this nesting is probably unecessary, unless an account got deleted or something crazy edge case
         user = get_user_by_id(user_id, session)
         if user:
             user = dict(user._mapping)
@@ -68,7 +71,7 @@ def get_signed_in_user(session: DbSession, request: Request):
                 "result": {
                     "user_id": user["user_id"],
                     "username": user["username"],
-                    "email_address": user["email_address"]
+                    "email_address": user["email_address"],
                 }
             }
         else:
