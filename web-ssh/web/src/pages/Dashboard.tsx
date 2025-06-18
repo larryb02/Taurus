@@ -30,7 +30,9 @@ export default function Dashboard() {
                 });
                 const json = await res.json();
                 console.log(json);
-
+                if (!res.ok) {
+                    throw new Error(`No user signed in.`);
+                }
                 const user: User = {
                     userId: json['result']['user_id'],
                     email: json['result']['email_address'],
@@ -90,9 +92,9 @@ export default function Dashboard() {
             }}>New Connection</button>
             <div className={page.page}>
                 <Sidebar />
-                {connections.map((item) =>
+                {connections.length > 0 ? connections.map((item) =>
                     <ConnectionItem connection={item} />
-                )}
+                ) : <div>Create a connection!!</div>}
             </div>
         </div>
         // </ConnectionsProvider>
