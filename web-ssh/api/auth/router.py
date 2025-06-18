@@ -2,11 +2,11 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from ..db.core import DbSession
 from .service import (
-    create_user,
-    login_user,
+    create,
+    login,
     get_user_by_email,
     get_current_user,
-    logoff_user,
+    logoff,
     get_user_by_id,
 )
 from .models import User, UserLogin
@@ -24,36 +24,10 @@ def create_account(user: User, session: DbSession):
             status_code=403, detail="User with this email already exists"
         )
     try:
-        res = create_user(user, session)
+        res = create(user, session)
         return {"result": "Sucessfully created user"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to process request: {e}")
-
-
-@router.post("/login")
-def login_account(user: UserLogin, session: DbSession, request: Request):
-    # check for existing user
-    # store user in session object or something
-    user_acc = get_user_by_email(user.email_or_user, session)
-    if user_acc:
-        user_acc = dict(get_user_by_email(user.email_or_user, session)._mapping)
-        try:
-            session = login_user(user_acc, user.password)
-            request.session["user_id"] = session
-            # regenerate_session_id(request)
-            print(request.session)
-            return session
-        except Exception as e:
-            print(f"Exception: {e}")
-            raise HTTPException(status_code=403, detail="Failed to login")
-    else:
-        raise HTTPException(status_code=403, detail="No user found")
-
-
-@router.post("/logoff")
-def logoff_account(request: Request):
-    logoff_user(request)
-    return {"result": "User has been signed out."}
 
 
 @router.get("/user")
@@ -78,3 +52,34 @@ def get_signed_in_user(session: DbSession, request: Request):
             raise HTTPException(status_code=400, detail="No user found")
     else:
         raise HTTPException(status_code=400, detail="No user signed in")
+
+
+@router.patch("/user")
+def change_user_setting():
+    pass
+
+
+@router.post("/login")
+def login_user(user: UserLogin, session: DbSession, request: Request):
+    # check for existing user
+    # store user in session object or something
+    user_acc = get_user_by_email(user.email_or_user, session)
+    if user_acc:
+        user_acc = dict(get_user_by_email(user.email_or_user, session)._mapping)
+        try:
+            session = login(user_acc, user.password)
+            request.session["user_id"] = session
+            # regenerate_session_id(request)
+            print(request.session)
+            return session
+        except Exception as e:
+            print(f"Exception: {e}")
+            raise HTTPException(status_code=403, detail="Failed to login")
+    else:
+        raise HTTPException(status_code=403, detail="No user found")
+
+
+@router.post("/logoff")
+def logoff_user(request: Request):
+    logoff(request)
+    return {"result": "User has been signed out."}

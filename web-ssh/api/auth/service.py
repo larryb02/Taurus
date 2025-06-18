@@ -55,7 +55,7 @@ def hash_password(password: str):
     return bcrypt.hashpw(to_bytes, salt)
 
 
-def create_user(user: User, dbsession: DbSession) -> dict:
+def create(user: User, dbsession: DbSession) -> dict:
     # TODO validate input
 
     hashed_pw = hash_password(user.password)
@@ -79,7 +79,7 @@ def create_user(user: User, dbsession: DbSession) -> dict:
         raise
 
 
-def login_user(user: dict, input_password: str):
+def login(user: dict, input_password: str):
     # validate credentials
     # print(user)
     expected_password = user["password"]
@@ -90,6 +90,6 @@ def login_user(user: dict, input_password: str):
         raise ValueError("Incorrect credentials")
 
 
-def logoff_user(request: Request) -> None:
+def logoff(request: Request) -> None:
     request.session.clear()
     # redirect once we get to that part, for now will probably just redirect on client
