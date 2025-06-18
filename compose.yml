@@ -48,7 +48,7 @@ services:
     #    target: /dev/shm
     #    tmpfs:
     #      size: 134217728 # 128*2^20 bytes = 128Mb
-     - ${HOME}/Projects:/code
+     - ${HOME}/Projects/web-ssh:/code
     environment:
       POSTGRES_PASSWORD: example
     ports:
