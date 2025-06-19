@@ -29,10 +29,21 @@ def get_all(user: UserAccount, dbsession: DbSession):
     except Exception as e:
         ssh_service_logger.error(f"Failed to execute query {e}")
 
+
 def get():
-    # TODO: stub for getting connection, 
+    # TODO: stub for getting connection,
     # will be needed to spin up ssh sessions
     pass
+
+
+def encrypt(buffer: bytes) -> bytes:
+    key_file = open("secrets.key", "rb")
+    key = key_file.read(32)
+    aesgcm = AESGCM(key)
+    nonce = os.urandom(12)
+    ciphertext = nonce + aesgcm.encrypt(nonce, buffer, None)
+    return ciphertext
+
 
 def create(user_id: int, ssh_connection: SSHConn, dbsession: DbSession):
     try:
@@ -40,11 +51,7 @@ def create(user_id: int, ssh_connection: SSHConn, dbsession: DbSession):
     except Exception as e:
         ssh_service_logger.error(f"Failed to serialize {e}")
     ssh_service_logger.debug(f"Creds as bytes: {credentials_as_bytes}")
-    key_file = open("secrets.key", "rb")
-    key = key_file.read(32)
-    aesgcm = AESGCM(key)
-    nonce = os.urandom(12)
-    ciphertext = nonce + aesgcm.encrypt(nonce, credentials_as_bytes, None)
+    encrypted_credentials = encrypt(credentials_as_bytes)
     stmt = (
         insert(SSHConnection)
         .values(
@@ -52,7 +59,7 @@ def create(user_id: int, ssh_connection: SSHConn, dbsession: DbSession):
             hostname=ssh_connection.hostname,
             username=ssh_connection.username,
             user_id=user_id,
-            credentials=ciphertext,
+            credentials=encrypted_credentials,
         )
         .returning(
             SSHConnection.label,
