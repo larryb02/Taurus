@@ -6,8 +6,9 @@ from fastapi.responses import JSONResponse
 from starsessions import SessionMiddleware, InMemoryStore, SessionAutoloadMiddleware
 from .api import router as api_router
 
-logger = logging.getLogger("uvicorn.access")
-
+root_logger = logging.getLogger("web_ssh")
+root_logger.setLevel(logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG) # TODO need to create a handler for my logger
 
 app = FastAPI(
     title="[ssh client] REST API",
@@ -34,8 +35,8 @@ app.include_router(api_router)
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     exc_str = f"{exc}".replace("\n", " ").replace("   ", " ")
-    logger.error(f"{request}: {exc_str}")
-    content = {"status_code": 10422, "message": exc_str, "data": None}
+    root_logger.error(f"{request}: {exc_str}")
+    content = {"status_code": 422, "message": exc_str, "data": None}
     return JSONResponse(
         content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
     )
