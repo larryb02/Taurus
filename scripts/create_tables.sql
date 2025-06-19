@@ -3,7 +3,7 @@ CREATE TABLE SSHConnection (
     label VARCHAR(255) NOT NULL,
     hostname VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
-    user_id INT REFERENCES UserAccount(user_id), 
+    user_id INT REFERENCES UserAccount(user_id) NOT NULL, 
     credentials BYTEA NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
