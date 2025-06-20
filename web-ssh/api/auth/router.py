@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from ..db.core import DbSession
@@ -11,8 +12,8 @@ from .service import (
 )
 from .models import User, UserLogin
 
-# from starsessions.session import regenerate_session_id
-
+auth_logger = logging.getLogger("web_ssh.auth")
+auth_logger.setLevel(logging.DEBUG)
 router = APIRouter(prefix="/auth")
 
 
@@ -64,19 +65,16 @@ def login_user(user: UserLogin, session: DbSession, request: Request):
     # check for existing user
     # store user in session object or something
     user_acc = get_user_by_email(user.email_or_user, session)
-    if user_acc:
-        user_acc = dict(get_user_by_email(user.email_or_user, session)._mapping)
-        try:
-            session = login(user_acc, user.password)
-            request.session["user_id"] = session
-            # regenerate_session_id(request)
-            print(request.session)
-            return session
-        except Exception as e:
-            print(f"Exception: {e}")
-            raise HTTPException(status_code=403, detail="Failed to login")
-    else:
-        raise HTTPException(status_code=403, detail="No user found")
+    if not user_acc:
+        raise HTTPException(status_code=403, detail="Failed to login")
+    user_acc = dict(get_user_by_email(user.email_or_user, session)._mapping)
+    try:
+        session = login(user_acc, user.password)
+        request.session["user_id"] = session
+        return session
+    except Exception as e:
+        print(f"Exception: {e}")
+        raise HTTPException(status_code=403, detail="Failed to login")
 
 
 @router.post("/logoff")
