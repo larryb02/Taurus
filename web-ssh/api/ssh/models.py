@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from ..db.core import Base
 from sqlalchemy import ForeignKey, String, TIMESTAMP, LargeBinary
 from sqlalchemy.orm import Mapped, mapped_column
@@ -10,7 +10,6 @@ from typing import Annotated
 class Auth(BaseModel):
     auth_type: str
     credentials: str
-
 
 
 class SSHConnection(Base):
@@ -26,9 +25,11 @@ class SSHConnection(Base):
 
 
 class SSHConn(BaseModel):
-    label: Annotated[str, "Label for management of ssh connections"]
-    hostname: Annotated[str, "Hostname for ssh connection"]
-    username: Annotated[str, "Username for ssh connection"]
+    label: Annotated[str, "Label for management of ssh connections"] = Field(
+        min_length=1
+    )
+    hostname: Annotated[str, "Hostname for ssh connection"] = Field(min_length=1)
+    username: Annotated[str, "Username for ssh connection"] = Field(min_length=1)
     credentials: Annotated[
         Auth,
         (
