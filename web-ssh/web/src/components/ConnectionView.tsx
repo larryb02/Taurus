@@ -2,8 +2,8 @@ import { config } from "../config";
 import { useEffect, useState } from "react";
 import { useConnectionsContext } from "../context/ConnectionsContext";
 import ConnectionItem from "./ConnectionItem";
-import Header from '../components/Header';
 import ConnectionForm from "../components/ConnectionForm";
+import '../styles/ConnectionView.css';
 import buttons from '../styles/buttons.module.css';
 
 export default function ConnectionView() {
@@ -27,7 +27,7 @@ export default function ConnectionView() {
     }, []);
 
     if (isAddingConnection) {
-        // we'll do some css magic here -> like a nice animation to render a panel
+        // we'll do some css magic here -> like a modal
         // but for now we'll do this
         return (
             <div className="connections-view">
@@ -36,7 +36,7 @@ export default function ConnectionView() {
         )
     }
 
-    return <div className="connections-view"> {/* make this display: block */}
+    return <div className="connections-view">
         <div className="connections-header">
             <div className="button-container">
                 <button className={`${buttons.default_button} new-connection-button`} onClick={() => {
