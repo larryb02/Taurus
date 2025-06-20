@@ -2,8 +2,6 @@
 // For now just dealing with one terminal
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
-import page from '../page.module.css'; // these should probably be globals
-import termStyles from '../styles/terminal.module.css';
 import Terminal from '../components/Terminal'
 import { useSessionsContext } from '../context/SessionsContext';
 
@@ -16,11 +14,11 @@ export default function TerminalView() {
 
     const { label, user, hostname } = session;
     return (
-        <div className={page.top_level}>
+        <div className="">
             <Header />
-            <div className={page.page}>
+            <div className="">
                 <Sidebar />
-                <div className={termStyles.terminal_view}>
+                <div className="">
                     <Terminal sshConnectionData={{
                         "label": label,
                         "user": user,
@@ -29,7 +27,6 @@ export default function TerminalView() {
                     }} sessionStarted={true} />
                 </div>
             </div>
-
         </div>
     );
 }
