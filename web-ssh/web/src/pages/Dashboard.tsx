@@ -21,15 +21,14 @@ export default function Dashboard() {
     const { connections, setConnections } = useConnectionsContext();
     const { setCurrentUser } = useUserContext();
 
+
     useEffect(() => {
         const fetchUser = async () => {
-            console.log(`Starting Fetch: ${config.api.url}${config.api.routes.auth.user}`);
             try {
                 const res = await fetch(`${config.api.url}${config.api.routes.auth.user}`, {
                     credentials: "include"
                 });
                 const json = await res.json();
-                console.log(json);
                 if (!res.ok) {
                     throw new Error(`No user signed in.`);
                 }
@@ -38,37 +37,44 @@ export default function Dashboard() {
                     email: json['result']['email_address'],
                     username: json['result']['username']
                 };
-
                 setCurrentUser(user);
-                // return json;
+
+                // NOTE: fetching connections after getting user works for now, 
+                // but consider moving this to a function in ConnectionsContext
+                const res2 = await fetch(`${config.api.url}${config.api.routes.ssh.connection}`, {
+                    credentials: "include"
+                });
+                const json2 = await res2.json();
+                setConnections(json2["results"]);
             } catch (error) {
                 throw new Error(`Failed to fetch ${error}`);
             }
         }
-        console.log(`Fetch for ${config.api.url}${config.api.routes.auth.user} complete`)
         fetchUser();
     }, []);
 
-    useEffect(() => {
-        console.log(`Starting Fetch: ${config.api.url}${config.api.routes.ssh.connection}`);
-        (async () => {
-            try {
-                const res = await fetch(`${config.api.url}${config.api.routes.ssh.connection}`);
-                // console.log(res);
-                const json = await res.json();
-                if (!res.ok) {
-                    throw new Error(`Failed to fetch ssh connections: ${res.status}, ${res.statusText}`);
-                }
-                setConnections(json["results"]);
-            } catch (error) {
-                throw new Error(`Failed to fetch connections ${error}`);
-            }
-        })();
-        console.log(`Fetch for ${config.api.url}${config.api.routes.ssh.connection} complete`)
-        return () => {
 
-        }
-    }, []);
+    // useEffect(() => {
+    //     console.log(`Starting Fetch: ${config.api.url}${config.api.routes.ssh.connection}`);
+    //     (async () => {
+    //         try {
+    //             const res = await fetch(`${config.api.url}${config.api.routes.ssh.connection}`);
+    //             // console.log(res);
+    //             const json = await res.json();
+    //             if (!res.ok) {
+    //                 throw new Error(`Failed to fetch ssh connections: ${res.status}, ${res.statusText}`);
+    //             }
+    //             setConnections(json["results"]);
+    //         } catch (error) {
+    //             throw new Error(`Failed to fetch connections ${error}`);
+    //         }
+    //     })();
+    //     console.log(`Fetch for ${config.api.url}${config.api.routes.ssh.connection} complete`)
+    //     return () => {
+    //     }
+    // }, []);
+
+
 
     if (isAddingConnection) {
         // we'll do some css magic here -> like a nice animation to render a panel
