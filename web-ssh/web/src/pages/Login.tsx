@@ -49,7 +49,6 @@ export default function Login() {
                     credentials: "include"
                 }
             );
-
             if (!res.ok) {
                 const statusCode = res.status;
                 switch (statusCode) {
@@ -57,17 +56,17 @@ export default function Login() {
                         setError("Incorrect username or password.");
                         break;
                     default:
-                        setError("Internal Server Error, please try again.");
+                        setError("Something went wrong, please try again.");
                         break;
                 }
                 throw new Error(`Failed to fetch: {
                     Status Code: ${res.status}
                     Msg: ${res.statusText}}`);
             }
-
             const data = await res.json();
             console.log(data);
         } catch (error) {
+            setError("Internal Server Error, please try again.");
             throw new Error(`Failed to fetch: {
                 Route: ${config.api.routes.auth.login}
                 Error: ${error}}`
@@ -96,8 +95,8 @@ export default function Login() {
                     }
                 }
             );
-
             if (!res.ok) {
+                setError("Failed to create user, please try again.");
                 throw new Error(`Failed to fetch: {
                     Status Code: ${res.status}
                     Msg: ${res.statusText}}`);
@@ -113,9 +112,6 @@ export default function Login() {
                 console.log(userData)
                 setIsCreatingAccount(false);
             }
-
-
-
         } catch (error) {
             throw new Error(`Failed to fetch: {
                 Route: ${config.api.routes.auth.user}
