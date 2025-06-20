@@ -4,8 +4,16 @@
     border-radius: 8px;
     width: 150px;
     height: 100px;
+    position: relative;
 }
 
 .connection_item:hover {
     border-color: #646cff;
+    cursor: pointer;
+}
+
+.connection_item button {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
 }
