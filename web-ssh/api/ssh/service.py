@@ -1,9 +1,8 @@
 from ..db.core import DbSession
 from .models import SSHConnection, SSHConn
 from ..auth.models import UserAccount
-
 # from ..auth.service import get_current_user
-from sqlalchemy import select, insert, and_
+from sqlalchemy import select, insert
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 import logging
 import pickle
@@ -37,8 +36,8 @@ def get():
 
 
 def encrypt(buffer: bytes) -> bytes:
-    key_file = open("secrets.key", "rb")
-    key = key_file.read(32)
+    with open("secrets.key", "rb") as key_file:
+        key = key_file.read(32)
     aesgcm = AESGCM(key)
     nonce = os.urandom(12)
     ciphertext = nonce + aesgcm.encrypt(nonce, buffer, None)
