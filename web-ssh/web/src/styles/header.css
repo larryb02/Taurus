@@ -1,0 +1,12 @@
+.header {
+    /* margin-bottom: 20px; */
+    padding: 20px;
+    border-bottom: 1px solid white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* .title {
+    font-size: medium;
+} */
