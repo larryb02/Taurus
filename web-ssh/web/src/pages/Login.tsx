@@ -32,6 +32,8 @@ export default function Login() {
         confirmPassword: ""
     });
 
+    const [error, setError] = useState<string | null>(null);
+
     const signIn = async () => {
         try {
             const res = await fetch(`${config.api.url}${config.api.routes.auth.login}`,
@@ -49,6 +51,15 @@ export default function Login() {
             );
 
             if (!res.ok) {
+                const statusCode = res.status;
+                switch (statusCode) {
+                    case 403:
+                        setError("Incorrect username or password.");
+                        break;
+                    default:
+                        setError("Internal Server Error, please try again.");
+                        break;
+                }
                 throw new Error(`Failed to fetch: {
                     Status Code: ${res.status}
                     Msg: ${res.statusText}}`);
@@ -169,6 +180,11 @@ export default function Login() {
                     }>
                     </input>
                 </div>
+                {error !== null &&
+                    <div className="error-msg">
+                        {error}
+                    </div>
+                }
                 <div className="login-action">
                     {/* <button onClick={() => setIsCreatingAccount(true)}>Create Account</button> */}
                     <a className="" href="#" onClick={(e) => {
