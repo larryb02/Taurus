@@ -3,6 +3,7 @@ export interface Connection {
     label: string;
     hostname: string;
     user: string;
+    connection_id: number;
     // pass: string;
 }
 
