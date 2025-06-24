@@ -8,7 +8,9 @@
 .dashboard-view {
     display: flex;
     height: 100vh;
+    width: 100vw;
     flex-direction: row;
+    overflow: hidden;
 }
 
 .button-container {
