@@ -11,10 +11,10 @@ Aiming to provide a modern experience to remote-based terminal workflows. (Name 
 
 ### Roadmap
 This is an early prototype of a cloud based ssh platform, it currently requires a lot of trust in my infrastructure for personal use. However, I plan on implementing a zero-trust solution that:  
-<style type="text/css">
+<!-- <style type="text/css">
     ol { list-style-type: upper-alpha; }
-</style>  
-<ol>
+</style>   -->
+<ol type="A">
   <li><strong>Can</strong> be deployed on your own infrastructure (However this won't be necessary)</li>
   <li>Eliminates the need to store credentials for access to remote servers</li>
   <li>Strong auth flows and access control</li>
