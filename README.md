@@ -4,28 +4,41 @@ A web based ssh client that centralizes all of your passwords and connections.
 Aiming to provide a modern experience to remote-based terminal workflows. (Name Here) provides the ability to save and manage remote connections from any machine, open multiple terminal sessions, and automate ssh key generation &mdash; without installing any software.
 
 ## Current Features
-- Basic SSH connection
+- SSH Connections
+    - Connect to remote servers with a terminal
+- Manage SSH connections
+    - Create, Update, and Delete SSH configurations
+
+### Roadmap
+This is an early prototype of a cloud based ssh platform, it currently requires a lot of trust in my infrastructure for personal use. However, I plan on implementing a zero-trust solution that:  
+<style type="text/css">
+    ol { list-style-type: upper-alpha; }
+</style>  
+<ol>
+  <li><strong>Can</strong> be deployed on your own infrastructure (However this won't be necessary)</li>
+  <li>Eliminates the need to store credentials for access to remote servers</li>
+  <li>Strong auth flows and access control</li>
+</ol>  
 
 ## Architecture
-This application currently consists of three core components (Updating as I go):  
+This application currently consists of three core components:
 ### SSH Client:
 Manages terminal sessions 
 - Spawns a pty process 
 - Creates ssh connection
-- Streams i/o to client via websocket
+- Streams i/o to/from client via websocket
 ### Web Client:
 - Initiates SSH session through SSH client
 - Displays terminal output and captures user input
 ### REST API:
 - Auth
-- Manage ssh config (fetch, create, delete, etc) 
+- SSH config management
 <!-- - Insert UML diagram here -->
-### Planned Components
-This section outlines future components that are actively being built or have been planned for future development.
 ### Diagram
 
-## Get Started
 
+## Get Started (Out of Date)
+**Note** These instructions are not currently up to date, but I will provide a working solution soon!
 ### Development
 Dev environment coming soon
 
