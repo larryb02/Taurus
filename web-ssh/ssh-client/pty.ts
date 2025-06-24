@@ -13,7 +13,7 @@ export class Pty {
         this._socket = socket;
         this._ptyProcess = this.startSession(credentials);
         if (this._ptyProcess === null) {
-            logger.warn(`Problem creating session`)
+            logger.error(`Problem creating session`);
         }
         this.ptyPID = this._ptyProcess.pid;
         logger.debug(`process launched [${this.ptyPID}]`);
@@ -42,7 +42,7 @@ export class Pty {
                     break;
                 default:
                     logger.error(`Error spawning pty: Status Code: ${e.exitCode}, Signal: ${e.signal}`);
-                    this._socket.emit("Error", { "Exit_Code": exitCode, "Signal": e.signal });
+                    this._socket.emit("err", { "Exit_Code": exitCode, "Signal": e.signal });
                     break;
             }
             logger.info(`Shell process [${this.ptyPID}] terminated`);
@@ -64,9 +64,9 @@ export class Pty {
         // STAGE 2: ATTEMPT TO SIGN IN -> MUST CHECK FOR FAILURE HERE AS WELL
         // STAGE 3: SUCCESS -> CLEANUP EVENTS REGISTERED FOR PTY STARTUP AND REGISTER REGULAR SESSION EVENTS
 
-        const { user, hostname, pass } = credentials;
+        const { username, hostname, pw } = credentials;
         logger.debug(`Connecting with session credentials ${JSON.stringify(credentials)}`);
-        const con = new SSHConn(user, hostname);
+        const con = new SSHConn(username, hostname);
         const cmd = con.getCommand();
         logger.debug(cmd);
 
@@ -113,7 +113,7 @@ export class Pty {
                     logger.debug("Current Step: SIGN IN");
                     if (buffer.toLowerCase().includes("password:")) {
                         logger.info("User is not signed in. Signing in.");
-                        p.write(`${pass}\r`);
+                        p.write(`${pw}\r`);
                     }
                     buffer = "";
                     step = Startup.AUTH_CHECK;
@@ -128,10 +128,12 @@ export class Pty {
                     }
                     if (buffer.toLowerCase().match(/[$#]\s*$/)) {
                         logger.info("Authentication successful. Entering shell.");
-                        this._socket.emit("pty:output", buffer);
-                        buffer = "";
+                        
                         // step = Startup.READY;
                         // p.write('\r');
+                        this._socket.emit("success");
+                        this._socket.emit("pty:output", buffer);
+                        buffer = "";
                         this.registerEvents(p);
                         ex.dispose();
                         ev.dispose();
@@ -150,7 +152,7 @@ export class Pty {
 
         const ex = p.onExit(() => {
             logger.error("Something went wrong, terminating session");
-            this._socket.emit("sessionTerminated");
+            this._socket.emit("err");
             ex.dispose();
             ev.dispose();
         });

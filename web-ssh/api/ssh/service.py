@@ -1,6 +1,7 @@
 from ..db.core import DbSession
 from .models import SSHConnection, SSHConn
 from ..auth.models import UserAccount
+
 # from ..auth.service import get_current_user
 from sqlalchemy import select, insert
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
@@ -29,17 +30,43 @@ def get_all(user: UserAccount, dbsession: DbSession):
         ssh_service_logger.error(f"Failed to execute query {e}")
 
 
-def get():
+def get_credentials(connection_id, dbsession: DbSession):
+    """
+    Get credentials to start an ssh connection
+
+    **Note** : This function is intended for sending directly to ssh runner.
+    There will be another function for getting a singular ssh connection for crud operations on web client.
+    """
     # TODO: stub for getting connection,
     # will be needed to spin up ssh sessions
-    pass
+    stmt = select(
+        SSHConnection.hostname, SSHConnection.username, SSHConnection.credentials
+    ).where(
+        SSHConnection.connection_id == connection_id
+    )  # should also make sure that the user requesting these 
+       # credentials owns this resource
+    try:
+        connection = dbsession.execute(stmt).one_or_none()._mapping
+        return connection
+    except Exception as e:
+        pass
 
+def decrypt(ciphertext: bytes):
+    with open("secrets.key", "rb") as key_file:
+        key = key_file.read(32)
+    aesgcm = AESGCM(key)
+    nonce = b'\xc1\xec\x94)\xd9\xe3(M\x1b\x1eBM' # hard coded for testing purposes
+    # ct = ciphertext[12:]
+    plaintext = aesgcm.decrypt(nonce, ciphertext, None)
+    return plaintext
 
 def encrypt(buffer: bytes) -> bytes:
     with open("secrets.key", "rb") as key_file:
         key = key_file.read(32)
     aesgcm = AESGCM(key)
-    nonce = os.urandom(12)
+    # nonce = os.urandom(12)
+    nonce = b'\xc1\xec\x94)\xd9\xe3(M\x1b\x1eBM'
+    print(nonce)
     ciphertext = nonce + aesgcm.encrypt(nonce, buffer, None)
     return ciphertext
 
@@ -47,10 +74,11 @@ def encrypt(buffer: bytes) -> bytes:
 def create(user_id: int, ssh_connection: SSHConn, dbsession: DbSession):
     try:
         credentials_as_bytes = pickle.dumps(ssh_connection.credentials)
+        print(f"Storing creds: {credentials_as_bytes}")
     except Exception as e:
         ssh_service_logger.error(f"Failed to serialize {e}")
     ssh_service_logger.debug(f"Creds as bytes: {credentials_as_bytes}")
-    encrypted_credentials = encrypt(credentials_as_bytes)
+    # encrypted_credentials = encrypt(credentials_as_bytes)
     stmt = (
         insert(SSHConnection)
         .values(
@@ -58,7 +86,7 @@ def create(user_id: int, ssh_connection: SSHConn, dbsession: DbSession):
             hostname=ssh_connection.hostname,
             username=ssh_connection.username,
             user_id=user_id,
-            credentials=encrypted_credentials,
+            credentials=credentials_as_bytes,
         )
         .returning(
             SSHConnection.label,
