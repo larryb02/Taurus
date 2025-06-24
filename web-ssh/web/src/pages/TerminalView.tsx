@@ -5,28 +5,30 @@ import Sidebar from '../components/Sidebar';
 import Terminal from '../components/Terminal'
 import { useSessionsContext } from '../context/SessionsContext';
 
-
 export default function TerminalView() {
     // need to identify and render active session/s
 
     const { getActiveSession } = useSessionsContext();
     const session = getActiveSession();
-
-    const { label, user, hostname } = session;
-    return (
-        <div className="">
-            <Header />
-            <div className="">
-                <Sidebar />
-                <div className="">
-                    <Terminal sshConnectionData={{
-                        "label": label,
-                        "user": user,
-                        "hostname": hostname,
-                        "pass": "password"
-                    }} sessionStarted={true} />
+    if (session) {
+        const { label, user, hostname, connection_id } = session;
+        return (
+            <div className="terminal-view">
+                <Header />
+                <div className="view">
+                    <Sidebar />
+                    {/* <div className="container"> */}
+                    <Terminal sshConnectionData={
+                        // "label": label,
+                        // "user": user,
+                        // "hostname": hostname,
+                        // "pass": "password"
+                        connection_id
+                    } />
+                    {/* </div> */}
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
+
 }
