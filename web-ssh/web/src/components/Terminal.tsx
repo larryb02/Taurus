@@ -1,78 +1,98 @@
 "use client";
 import { Terminal } from '@xterm/xterm';
+import { FitAddon } from '@xterm/addon-fit';
 import '@xterm/xterm/css/xterm.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { socket } from '../socket';
-import termView from '../styles/terminal.module.css'
+import '../styles/terminal.css';
 
 interface terminalProps {
-    sshConnectionData: Record<string, string>;
-    sessionStarted: boolean;
-
+    sshConnectionData: number;
 }
 
-export default function terminal({ sshConnectionData, sessionStarted }: terminalProps) { // need to resolve naming conflicts...
-    // 
-    useEffect(() => {
-        // note add a case if connection to socket fails
-        const term: Terminal = new Terminal();
-        console.log(`New terminal instance created`);
-        if (document.getElementById('terminal')) {
-            term.open(document.getElementById('terminal') as HTMLElement);
-        }
+export default function terminal({ sshConnectionData }: terminalProps) { // need to resolve naming conflicts...
+    /** 
+     * Step 1:
+     *  - Do not pass credentials from the clientside
+     *  - Establish a websocket connection and handle connection logic on server
+     *  - Register event listeners that signal successful or failed connection
+     * Step 2:
+     *  - Mount components
+     *      - Terminal + socket i/o events
+     * Step 3:
+     *  - Make it possible to render multiple terminals and switch between them
+     *  
+     *
+     */
+    const [error, setError] = useState<string | null>(null);
+
+    let term: Terminal | null = null;
+    const init = () => {
+        // register bare minimum events for setting up connection
         socket.on("connect", () => {
-            // console.log(destination.destination);
-            socket.emit("sessionData", sshConnectionData); // initial connection send user, host, and password
-            // setIsLoading(true);
-            // setTimeout(() => {
-            //      setIsLoading(false);
-            // }, 5000);
-            console.log("Connected: ", socket.id);
+            // send connection id
+            socket.emit("connection-info", sshConnectionData);
         });
 
-        term.onData(data => {
-            console.log(`sending input event: ${JSON.stringify(data)}`);
-            socket.emit("terminal:input", data);
-        });
+        socket.on("success", () => {
+            // console.log(`Success!`);
+            // socket.removeListener("connect");
+            // setup term
+            const fitAddon = new FitAddon();
+            term = new Terminal();
+            term?.loadAddon(fitAddon);
+            if (document.getElementById('terminal')) {
+                term?.open(document.getElementById('terminal') as HTMLElement);
+                console.log(`Proposed Dimensions: ${JSON.stringify(fitAddon.proposeDimensions())}`);
+                fitAddon.fit();
+            }
 
-        socket.on("pty:output", (chunk) => {
-            console.log("Received data from pty", chunk);
-            term.write(chunk);
-        });
+            term?.onData(data => {
+                console.log(`sending input event: ${JSON.stringify(data)}`);
+                socket.emit("terminal:input", data);
+            });
 
-        socket.on("sessionTerminated", () => {
+            socket.on("pty:output", (chunk) => {
+                console.log("Received data from pty", chunk);
+                term?.write(chunk);
+            });
+
+            socket.on("sessionTerminated", () => {
+                socket.disconnect();
+                term?.dispose();
+            })
+
+        });
+        socket.on("err", () => {
+            console.log(`error`);
+            setError("Failed to establish connection");
             socket.disconnect();
-            term.dispose();
         })
-
-        socket.on("disconnect", (reason) => {
-            console.log(`Disconnected from socket ${socket.id}\nReason: ${reason}`);
-        //     setSessionStarted(false);
+        socket.on("disconnect", () => {
+            socket.off("status");
+            console.log(`Disconnected from socket`);
         });
-
-        socket.on("error", (err) => {
-            console.error(err);
-        });
-
         socket.connect();
-
-
+    }
+    useEffect(() => {
+        init();
 
         return () => {
             console.log("Cleanup called");
-            socket.off('connect');
-            socket.off('pty:output');
-            socket.off('pty:disconnect');
+            socket.removeAllListeners();
             socket.disconnect();
             term?.dispose();
         };
-    }, [sessionStarted]);
+    }, []);
 
-
+    if (error) {
+        return <div className="error-message">{error}</div>
+    }
 
     return (
-        <div className={termView.terminal_view}>
-            <div id="terminal"></div>
-        </div>
+        // <div className="terminal-view">
+        // <div id="container">
+        <div id="terminal"></div>
+        // </div>
     );
 }
