@@ -27,6 +27,13 @@ export default function terminal({ sshConnectionData }: terminalProps) { // need
     const [error, setError] = useState<string | null>(null);
 
     let term: Terminal | null = null;
+    const openTerm = () => {
+        const fitAddon = new FitAddon();
+        const term = new Terminal();
+        term.loadAddon(fitAddon);
+        term.open(document.getElementById('terminal') as HTMLElement);
+        fitAddon.fit();
+    }
     const init = () => {
         // register bare minimum events for setting up connection
         socket.on("connect", () => {
@@ -75,8 +82,8 @@ export default function terminal({ sshConnectionData }: terminalProps) { // need
         socket.connect();
     }
     useEffect(() => {
+        // openTerm(); only for testing
         init();
-
         return () => {
             console.log("Cleanup called");
             socket.removeAllListeners();

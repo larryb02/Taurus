@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useConnectionsContext } from "../context/ConnectionsContext";
 import ConnectionItem from "./ConnectionItem";
 import ConnectionForm from "../components/ConnectionForm";
-import '../styles/ConnectionView.css';
+import '../styles/Connections/ConnectionView.css';
 import buttons from '../styles/buttons.module.css';
 
 export default function ConnectionView() {
@@ -18,6 +18,7 @@ export default function ConnectionView() {
                     credentials: "include"
                 });
                 const data = await res.json();
+                console.log(data["results"]);
                 setConnections(data["results"]);
             } catch (error) {
                 throw new Error(`Failed to fetch ${error}`);
@@ -38,8 +39,9 @@ export default function ConnectionView() {
 
     return <div className="connections-view">
         <div className="connections-header">
+            <div className="title">Connections</div>
             <div className="button-container">
-                <button className={`${buttons.default_button} new-connection-button`} onClick={() => {
+                <button className={`new-connection-button`} onClick={() => {
                     setIsAddingConnection(true);
                 }}>New Connection</button>
             </div>

@@ -1,6 +1,7 @@
 .default_button {
     width: 250px;
     height: 40px;
+    max-width: 250px;
     /* cursor: pointer; */
 }
 

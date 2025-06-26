@@ -52,7 +52,7 @@ export default function Dashboard() {
         <div className="dashboard">
             <Header />
             <div className="dashboard-view">
-                <Sidebar />
+                {/* <Sidebar /> */}
                 <ConnectionView />
             </div>
         </div>

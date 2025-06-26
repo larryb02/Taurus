@@ -11,12 +11,12 @@ export default function TerminalView() {
     const { getActiveSession } = useSessionsContext();
     const session = getActiveSession();
     if (session) {
-        const { label, user, hostname, connection_id } = session;
+        const { connection_id } = session;
         return (
             <div className="terminal-view">
                 <Header />
                 <div className="view">
-                    <Sidebar />
+                    {/* <Sidebar /> */}
                     {/* <div className="container"> */}
                     <Terminal sshConnectionData={
                         // "label": label,

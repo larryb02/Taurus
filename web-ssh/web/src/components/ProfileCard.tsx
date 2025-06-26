@@ -14,7 +14,7 @@ export default function ProfileCard({ currentUser }: ProfileCardProps) {
             credentials: "include"
         });
         if (!res.ok) {
-            console.log(`Something went wrong`);
+            console.log(`Something went wrong`); // will make a toast saying "successfully sign out or failed to sign out"
         }
         else {
             navigate(0); // refresh works, could just navigate directly to login, but we'll see how i implement

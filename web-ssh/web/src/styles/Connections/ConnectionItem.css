@@ -1,0 +1,51 @@
+.connection_item {
+    margin: 4px;
+    border: solid 1px white;
+    border-radius: 8px;
+    width: 300px;
+    height: 100px;
+    position: relative;
+    min-width: 100px;
+    display: flex;
+    flex-wrap: wrap;
+    /* overflow: hidden; */
+}
+
+.connection_item:hover {
+    /* border-color: #646cff; */
+    box-shadow: 0 0 4px #646cff;
+    cursor: pointer;
+}
+
+.connect-button {
+    position: absolute;
+    width: 100px;
+    bottom: 8px;
+    right: 52px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex: 1;
+    min-width: 10px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    padding: 8px;
+    background-color: black;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    z-index: 999;
+    min-width: 120px;
+}
+
+.dropdown-menu li {
+    list-style-type: none;
+}
+
+.dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
