@@ -1,11 +1,14 @@
 import { type User } from '../types';
 import { config } from '../config';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import Dropdown from './Dropdown';
 
 type ProfileCardProps = {
     currentUser: User;
 }
 
+// convert log out button to <a href=/logout ></a>
 export default function ProfileCard({ currentUser }: ProfileCardProps) {
     const navigate = useNavigate();
     const handleLogOff = async () => {
@@ -21,9 +24,10 @@ export default function ProfileCard({ currentUser }: ProfileCardProps) {
         }
     }
     return (
-        <div>
-            <div>{currentUser.username}</div>
-            <button onClick={() => handleLogOff()}>Log Off</button>
+        <div className="profile-card">
+            <Dropdown triggerLabel={currentUser.username} items={[{ "content": "Profile" },
+            { "content": <a href='#' onClick={() => handleLogOff()}>Log Out</a> }
+            ]} />
         </div>
     );
 }

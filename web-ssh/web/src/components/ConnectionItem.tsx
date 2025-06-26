@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import '../styles/Connections/ConnectionItem.css';
 import { useSessionsContext } from '../context/SessionsContext';
 import { useState, useRef, useEffect } from "react";
+import Dropdown from "./Dropdown";
 
 interface ConnectionItemProps {
     connection: Connection;
@@ -34,7 +35,12 @@ export default function ConnectionItem({ connection }: ConnectionItemProps) {
                     nav("/session"); {/* bare minimum to start a terminal */ }
                 }}>Connect
                 </button>
-                <div ref={dropdownRef} className="dropdown-wrapper">
+                <Dropdown triggerLabel=":" items={[{
+                    "content":"Edit"
+                }, {
+                    "content":"Remove"
+                }]}/>
+                {/* <div ref={dropdownRef} className="dropdown-wrapper">
                     <button onClick={() => {
                         setIsDropDownClicked(!(isDropDownClicked))
                         console.log(isDropDownClicked)
@@ -48,8 +54,9 @@ export default function ConnectionItem({ connection }: ConnectionItemProps) {
                         <ul className="dropdown-menu">
                             <li>Edit</li>
                             <li>Remove</li>
-                        </ul>}
-                </div>
+                        </ul>
+                        } */}
+                {/* </div> */}
             </div>
         </div>
     );
