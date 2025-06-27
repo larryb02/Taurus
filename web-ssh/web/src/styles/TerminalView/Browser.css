@@ -1,0 +1,42 @@
+/* Note rename if this doesnt make sense, but this handles all styling related to the ssh browser:
+    - Tab Bar
+    - Tabs
+    - Any extra functionality i end up adding 
+*/
+
+.tab-bar {
+    /* border: 1px white solid; */
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+}
+
+.tab-item {
+    display: flex;
+    border: 1px white solid;
+    border-radius: 5%;
+    height: 35px;
+    width: 100px;
+    border-bottom: none;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    cursor: pointer;
+    background-color: black;
+}
+
+.tab-item:hover {
+    
+    background-color: #ffffff0f;
+}
+
+.new-tab-btn {
+    display: flex;
+    align-items: center;
+    margin-left: 4px;
+    border: 1px white solid;
+    border-radius: 5%;
+    border-bottom: none;
+    cursor: pointer;
+}
