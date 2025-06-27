@@ -5,7 +5,7 @@ import Terminal from '../components/Terminal'
 import { useSessionsContext } from '../context/SessionsContext';
 import { useReducer } from 'react';
 import '../styles/TerminalView/Browser.css';
-import { type Connection } from '../types';
+
 
 const tabReducer = (tabs, action) => {
     switch (action.type) {
@@ -14,7 +14,7 @@ const tabReducer = (tabs, action) => {
         }
         case 'remove': {
             return tabs.filter((tab) => {
-                return tab !== action.payload;
+                return tab.tab_id !== action.payload.id;
             });
         }
         default:
@@ -30,15 +30,12 @@ export default function TerminalView() {
         console.log(`Adding tab!`);
     }
     const { sessions } = useSessionsContext();
+    console.log(sessions);
     let tabId = 0;
     const [tabs, dispatch] = useReducer(tabReducer, [{
         "tab_id": 0,
         "connection": sessions[0]
         // what info do i need to store
-    }, {
-        "tab_id": 1,
-        "connection": sessions[0]
-
     }]);
     // const sessionsList = sessions;
     // const session = getActiveSession();
@@ -51,7 +48,17 @@ export default function TerminalView() {
                     <div className="tab-bar">
                         {tabs.map((tab) => {
                             console.log(tab);
-                            return <span className="tab-item">{tab.connection.label}</span>
+                            return <span key={tab.tab_id} className="tab-item">
+                                <span className="tab-title">{tab.connection.label}</span>
+                                <span className="tab-exit-btn" onClick={() => {
+                                    dispatch({
+                                        type: "remove",
+                                        payload: {
+                                            id: tab.tab_id
+                                        }
+                                    })
+                                }}>x</span>
+                            </span>
                         })}
                         {/* <span className="tab-item">{sessions[0].label}</span> */}
                         <span onClick={() => {

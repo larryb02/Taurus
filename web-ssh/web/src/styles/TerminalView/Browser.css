@@ -14,10 +14,15 @@
 
 .tab-item {
     display: flex;
+    position: relative;
     border: 1px white solid;
-    border-radius: 5%;
+    /* figure out how to get nice clean rounded edges */
+    border-radius: 2%;
     height: 35px;
-    width: 100px;
+    /* we want the width to dynamically resize figure this out soon */
+    width: 300px;
+    max-width: 300px;
+    min-width: 50px;
     border-bottom: none;
     align-items: center;
     justify-content: center;
@@ -28,7 +33,7 @@
 
 .tab-item:hover {
     
-    background-color: #ffffff0f;
+    /* background-color: #ffffff0f; */
 }
 
 .new-tab-btn {
@@ -39,4 +44,16 @@
     border-radius: 5%;
     border-bottom: none;
     cursor: pointer;
+}
+
+.tab-exit-btn {
+    position: absolute;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+
+.tab-exit-btn:hover {
+    background-color: #ffffff0f;
 }
