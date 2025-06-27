@@ -3,7 +3,7 @@
 import Header from '../components/Header';
 import Terminal from '../components/Terminal'
 import { useSessionsContext } from '../context/SessionsContext';
-import { useReducer } from 'react';
+import { useReducer, useState, useRef, act } from 'react';
 import '../styles/TerminalView/Browser.css';
 
 
@@ -14,7 +14,7 @@ const tabReducer = (tabs, action) => {
         }
         case 'remove': {
             return tabs.filter((tab) => {
-                return tab.tab_id !== action.payload.id;
+                return tab.tabId !== action.payload.id;
             });
         }
         default:
@@ -26,19 +26,18 @@ const tabReducer = (tabs, action) => {
 export default function TerminalView() {
     // need to identify and render active session/s
 
-    const addTab = () => {
-        console.log(`Adding tab!`);
-    }
     const { sessions } = useSessionsContext();
     console.log(sessions);
-    let tabId = 0;
     const [tabs, dispatch] = useReducer(tabReducer, [{
-        "tab_id": 0,
+        "tabId": 0,
         "connection": sessions[0]
         // what info do i need to store
     }]);
-    // const sessionsList = sessions;
-    // const session = getActiveSession();
+
+    // once i move tab to component, may make sense to make a useeffect hook to set initial active tab
+    // also need to make a type for tabs
+    const [activeTab, setActiveTab] = useState(0); // storing tabId
+
     if (sessions.length > 0) {
         // const { connection_id } = session;
         return (
@@ -47,14 +46,16 @@ export default function TerminalView() {
                 <div className="view">
                     <div className="tab-bar">
                         {tabs.map((tab) => {
-                            console.log(tab);
-                            return <span key={tab.tab_id} className="tab-item">
+                            console.log(tabs);
+                            return <span key={tab.tabId}
+                                onClick={() => { setActiveTab(tab.tabId); console.log(`Set tab id to ${tab.tabId}`) }}
+                                className={`tab-item ${tab.tabId === activeTab ? 'active': ''}`}>
                                 <span className="tab-title">{tab.connection.label}</span>
                                 <span className="tab-exit-btn" onClick={() => {
                                     dispatch({
                                         type: "remove",
                                         payload: {
-                                            id: tab.tab_id
+                                            id: tab.tabId
                                         }
                                     })
                                 }}>x</span>

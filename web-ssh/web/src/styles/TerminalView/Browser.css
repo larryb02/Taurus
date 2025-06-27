@@ -31,9 +31,9 @@
     background-color: black;
 }
 
-.tab-item:hover {
+.active { /* this will be for when a tab-item is focused */
     
-    /* background-color: #ffffff0f; */
+    background-color: #ffffff0f;
 }
 
 .new-tab-btn {
