@@ -1,5 +1,5 @@
 import { useSessionsContext } from '../../context/SessionsContext';
-import { useReducer, useState, useEffect, act } from 'react';
+import { useReducer, useState, useEffect, useRef } from 'react';
 import { type Connection } from '../../types';
 import '../../styles/TerminalView/Browser.css';
 
@@ -18,8 +18,6 @@ type Action = {
     }
 }
 
-const tabHistory: number[] = []; // just store the tabIds in here, don't necessarily want this to be global scope
-
 const tabReducer = (tabs: Tab[], action: Action) => {
     const ac = action.type;
     switch (ac) {
@@ -36,22 +34,25 @@ const tabReducer = (tabs: Tab[], action: Action) => {
             return tabs;
     }
 }
-
+// note convert tabIdGen to a hook, maybe tabHistory too
 export default function TabBar() {
     const { sessions } = useSessionsContext();
     console.log(sessions);
+    const tabIdCounter = useRef<number>(0);
+    const tabHistory = useRef<number[]>([]);
     const [tabs, dispatch] = useReducer(tabReducer, [{
-        "tabId": 0,
+        "tabId": tabIdCounter.current,
         "connection": sessions[0]
         // what info do i need to store
     }]);
 
+    tabIdCounter.current++;
     // once i move tab to component, may make sense to make a useeffect hook to set initial active tab
     // also need to make a type for tabs
     const [activeTab, setActiveTab] = useState(0); // storing tabId
 
     const updateActiveTab = (prev: number, cur: number): void => {
-        tabHistory.push(prev);
+        tabHistory.current.push(prev);
         console.log(`Tab History: ${JSON.stringify(tabHistory)}`);
         setActiveTab(cur);
     }
@@ -60,16 +61,16 @@ export default function TabBar() {
         {tabs.map((tab) => {
             console.log(tabs);
             return <span key={tab.tabId}
-                onClick={() => { 
+                onClick={() => {
                     updateActiveTab(activeTab, tab.tabId);
-                    console.log(`Set tab id to ${tab.tabId}`); 
+                    console.log(`Set tab id to ${tab.tabId}`);
                 }}
                 className={`tab-item ${tab.tabId === activeTab ? 'active' : ''}`}>
                 <span className="tab-title">{tab.connection.label}</span>
                 <span className="tab-exit-btn" onClick={(e) => {
                     e.stopPropagation();
                     if (tab.tabId === activeTab) {
-                        const prevTab = tabHistory.pop();
+                        const prevTab = tabHistory.current.pop();
                         console.log(`Reverting to prev tab: ${prevTab}`);
                         if (prevTab !== undefined) setActiveTab(prevTab);
                     }
@@ -86,7 +87,7 @@ export default function TabBar() {
             dispatch({
                 type: "add",
                 payload: {
-                    tabId: tabs.length,
+                    tabId: tabIdCounter.current++,
                     connection:
                     {
                         label: "test-label",
