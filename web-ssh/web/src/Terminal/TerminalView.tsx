@@ -1,9 +1,9 @@
 // This is where Terminals will be mounted, will be a window with tab functionality, split screen functionality, etc in the future
 // For now just dealing with one terminal
-import Header from '../components/Header';
-import Terminal from '../components/Terminal'
-import { useSessionsContext } from '../context/SessionsContext';
-import TabBar from '../components/Terminal/TabBar';
+import Header from '@taurus/Common/Header';
+import Terminal from './Terminal'
+import { useSessionsContext } from '@taurus/context/SessionsContext';
+import TabBar from './TabBar';
 
 export default function TerminalView() {
     // need to identify and render active session/s

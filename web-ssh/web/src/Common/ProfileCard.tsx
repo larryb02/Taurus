@@ -1,8 +1,7 @@
-import { type User } from '../types';
-import { config } from '../config';
+import { type User } from '@taurus/types';
+import { config } from '@taurus/config';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import Dropdown from './Dropdown';
+import Dropdown from '@taurus/Common/Dropdown';
 
 type ProfileCardProps = {
     currentUser: User;
@@ -25,8 +24,8 @@ export default function ProfileCard({ currentUser }: ProfileCardProps) {
     }
     return (
         <div className="profile-card">
-            <Dropdown triggerLabel={currentUser.username} items={[{ "content": "Profile" },
-            { "content": <a href='#' onClick={() => handleLogOff()}>Log Out</a> }
+            <Dropdown triggerLabel={currentUser.username} items={[
+                { "content": <a href='#' onClick={() => handleLogOff()}>Log Out</a> }
             ]} />
         </div>
     );

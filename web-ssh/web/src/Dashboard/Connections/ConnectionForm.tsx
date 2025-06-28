@@ -1,8 +1,8 @@
-import styles from '../styles/ConnectionForm.module.css';
-import { useConnectionsContext } from '../context/ConnectionsContext';
+import styles from '@taurus/styles/ConnectionForm.module.css';
+import { useConnectionsContext } from '@taurus/Dashboard/Connections/ConnectionsContext';
 import { useState } from 'react';
-import { config } from '../config'
-import { updateField } from '../utils';
+import { config } from '@taurus/config'
+import { updateField } from '@taurus/utils';
 
 interface ConnectionFormProps {
     setIsAddingConnection: (value: boolean) => void;
@@ -70,12 +70,12 @@ export default function ConnectionForm({
 
             res = await res.json();
 
+            // CHANGE THIS APPROACH THIS IS BAD, DO NOT ADD FROM FRONTEND JUST FETCH ALL CONNS FROM BACKEND
             addConnection({
                 label: connectionData.label,
                 hostname: connectionData.hostname,
-                user: connectionData.user
-            }
-            );
+                user: connectionData.user,
+            });
             console.log(res);
             setIsAddingConnection(false);
         } catch (error) {

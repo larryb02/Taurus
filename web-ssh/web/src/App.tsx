@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import TerminalView from "./pages/TerminalView";
-import Login from './pages/Login'
-import { ConnectionsContextProvider } from "./context/ConnectionsContext"; // DO NOT LEAVE THIS HERE, or at least scope it down more
+import Dashboard from "./Dashboard/Dashboard";
+import TerminalView from "./Terminal/TerminalView";
+import Login from './Login/Login'
+import { ConnectionsContextProvider } from "./Dashboard/Connections/ConnectionsContext"; // DO NOT LEAVE THIS HERE, or at least scope it down more
 import { SessionsContextProvider } from "./context/SessionsContext";
 import { UserContextProvider } from "./context/UserContext";
 

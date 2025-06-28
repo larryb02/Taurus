@@ -3,7 +3,7 @@
  */
 
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { type User } from '../types';
+import { type User } from '@taurus/types';
 // import { config } from '../config';
 
 type Props = {

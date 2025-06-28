@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import Header from '../components/Header';
-import Sidebar from '../components/Sidebar';
-import '../styles/Dashboard.css';
-import ConnectionView from "../components/ConnectionView";
-import { useConnectionsContext } from "../context/ConnectionsContext";
-import { useUserContext } from "../context/UserContext";
-import { config } from "../config";
-import { type User } from "../types";
+import Header from '@taurus/Common/Header';
+// import Sidebar from '@taurus/Common/Sidebar';
+import '@taurus/styles/Dashboard.css';
+import ConnectionView from "@taurus/Dashboard/Connections/ConnectionView";
+import { useConnectionsContext } from "@taurus/Dashboard/Connections/ConnectionsContext";
+import { useUserContext } from "@taurus/context/UserContext";
+import { config } from "@taurus/config";
+import { type User } from "@taurus/types";
 
 
 export default function Dashboard() {

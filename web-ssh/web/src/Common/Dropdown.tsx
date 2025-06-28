@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import '../styles/Dropdown.css';
+import '@taurus/styles/Dropdown.css';
 
 interface DropdownProps {
     triggerLabel: React.ReactNode;
@@ -24,7 +24,7 @@ export default function Dropdown({ triggerLabel, items }: DropdownProps) {
 
     return (
         <div ref={dropdownRef} className="dropdown-wrapper">
-            <button onClick={() => { setIsOpen(!isOpen) }} className="">
+            <button onClick={() => { setIsOpen(!isOpen) }} className="profile-icon">
                 {triggerLabel}
             </button>
             {isOpen &&

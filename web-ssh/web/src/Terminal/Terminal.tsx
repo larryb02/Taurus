@@ -3,8 +3,8 @@ import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import '@xterm/xterm/css/xterm.css';
 import { useEffect, useState } from 'react';
-import { socket } from '../socket';
-import '../styles/terminal.css';
+import { socket } from '@taurus/lib/socket';
+import '@taurus/styles/terminal.css';
 
 interface terminalProps {
     sshConnectionData: number;
@@ -82,8 +82,8 @@ export default function terminal({ sshConnectionData }: terminalProps) { // need
         socket.connect();
     }
     useEffect(() => {
-        // openTerm(); only for testing
-        init();
+        openTerm(); // only for testing
+        // init();
         return () => {
             console.log("Cleanup called");
             socket.removeAllListeners();

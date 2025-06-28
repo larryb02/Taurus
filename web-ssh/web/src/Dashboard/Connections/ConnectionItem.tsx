@@ -1,8 +1,8 @@
-import { type Connection } from "../types";
+import { type Connection } from "@taurus/types";
 import { useNavigate } from "react-router-dom";
-import '../styles/Connections/ConnectionItem.css';
-import { useSessionsContext } from '../context/SessionsContext';
-import Dropdown from "./Dropdown";
+import '@taurus/styles/Connections/ConnectionItem.css';
+import { useSessionsContext } from '@taurus/context/SessionsContext';
+import Dropdown from "@taurus/Common/Dropdown";
 
 interface ConnectionItemProps {
     connection: Connection;

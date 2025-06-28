@@ -1,7 +1,7 @@
-import { useSessionsContext } from '../../context/SessionsContext';
-import { useReducer, useState, useEffect, useRef } from 'react';
-import { type Connection } from '../../types';
-import '../../styles/TerminalView/Browser.css';
+import { useSessionsContext } from '@taurus/context/SessionsContext';
+import { useReducer, useState, useRef } from 'react';
+import { type Connection } from '@taurus/types';
+import '@taurus/styles/TerminalView/Browser.css';
 
 type Tab = {
     tabId: number;

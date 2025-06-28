@@ -1,10 +1,9 @@
-import { config } from "../config";
+import { config } from "@taurus/config";
 import { useEffect, useState } from "react";
-import { useConnectionsContext } from "../context/ConnectionsContext";
+import { useConnectionsContext } from "./ConnectionsContext";
 import ConnectionItem from "./ConnectionItem";
-import ConnectionForm from "../components/ConnectionForm";
-import '../styles/Connections/ConnectionView.css';
-import buttons from '../styles/buttons.module.css';
+import ConnectionForm from "./ConnectionForm";
+import '@taurus/styles/Connections/ConnectionView.css';
 
 export default function ConnectionView() {
     const [isAddingConnection, setIsAddingConnection] = useState<boolean>(false); // add connection button

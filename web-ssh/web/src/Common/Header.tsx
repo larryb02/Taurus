@@ -1,6 +1,6 @@
-import '../styles/header.css' // note this will no longer be a module
+import '@taurus/styles/header.css' // note this will no longer be a module
 import { useNavigate } from 'react-router-dom';
-import { useUserContext } from '../context/UserContext';
+import { useUserContext } from '@taurus/context/UserContext';
 import ProfileCard from './ProfileCard';
 
 export default function Header() {

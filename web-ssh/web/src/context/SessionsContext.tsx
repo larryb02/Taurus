@@ -1,5 +1,5 @@
 import { useState, useReducer, createContext, useContext, type ReactNode } from "react";
-import { type Connection } from "../types";
+import { type Connection } from "@taurus/types";
 
 type Props = {
     children: ReactNode;
@@ -13,8 +13,7 @@ interface SessionsContextInterface {
     dispatch: React.Dispatch<Action>;
 }
 
-type Action =
-    {
+type Action = {
         type: 'update'
         payload: Connection
     } | {

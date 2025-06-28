@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from '../styles/sidebar.module.css'
+import styles from '@taurus/styles/sidebar.module.css'
 import { NavLink } from "react-router-dom";
 // import { useSessionsContext } from "../context/SessionsContext";
 
