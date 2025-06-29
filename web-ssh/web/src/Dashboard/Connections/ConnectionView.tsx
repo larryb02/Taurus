@@ -46,8 +46,8 @@ export default function ConnectionView() {
             </div>
         </div>
         <div className="connection-list">
-            {connections.length > 0 ? connections.map((item) =>
-                <ConnectionItem connection={item} />
+            {connections.length > 0 ? connections.map((item, index) =>
+                <ConnectionItem key={index} connection={item} />
             ) : <div>Create a connection!!</div>}
         </div>
     </div>;
