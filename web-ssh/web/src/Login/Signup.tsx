@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { Stack, TextField, Alert, Typography, Button, Link, InputLabel } from "@mui/material";
+import { Stack, TextField, Alert, Typography, Button } from "@mui/material";
 import { useState } from 'react';
 import { updateField } from "../utils";
 
@@ -20,7 +20,7 @@ export default function SignUp() {
 
     const [error, setError] = useState(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, field) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {
         updateField(signUpProps, setSignUpProps, field, e.target.value)
         console.log(signUpProps);
     }
