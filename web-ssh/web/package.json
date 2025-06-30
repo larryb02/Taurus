@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "taurus-web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@fontsource/roboto": "^5.2.6",
+    "@mui/material": "^7.2.0",
     "@types/node": "^24.0.7",
     "@xterm/addon-fit": "^0.10.0",
     "@xterm/addon-web-links": "^0.11.0",
