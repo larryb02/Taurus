@@ -8,10 +8,20 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+
 
 export default function ConnectionView() {
-    const [isAddingConnection, setIsAddingConnection] = useState<boolean>(false); // add connection button
     const { connections, setConnections } = useConnectionsContext();
+    const [open, setOpen] = useState(false);
+    const handleClick = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -30,21 +40,12 @@ export default function ConnectionView() {
         fetchUser();
     }, []);
 
-    if (isAddingConnection) {
-        // we'll do some css magic here -> like a modal
-        // but for now we'll do this
-        return (
-            <div className="connections-view">
-                <ConnectionForm setIsAddingConnection={setIsAddingConnection} />
-            </div>
-        )
-    }
-
     return (
         <Box className="connections-view">
             <Box className="connections-header">
                 <Typography variant="h5">Connections</Typography>
                 <Button variant="outlined"
+                    onClick={handleClick}
                     sx={{
                         bgcolor: 'transparent',
                         color: 'white',
@@ -52,13 +53,9 @@ export default function ConnectionView() {
                         borderColor: 'rgba(255,255,255,0.2)',
                         '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' },
                     }}>New Connection</Button>
-                {/* <div className="button-container">
-                <button className={`new-connection-button`} onClick={() => {
-                    setIsAddingConnection(true);
-                }}>New Connection</button>
-            </div> */}
+                    <ConnectionForm open={open} handleClose={handleClose}></ConnectionForm>
             </Box>
-            <Box className="connections">
+            <Box sx={{}} className="connections">
                 {connections.length > 0 ?
                     <Grid container spacing={2} sx={{ px: 2, py: 2, justifyContent: 'flex-start' }}>
                         {connections.map((item, index) =>
