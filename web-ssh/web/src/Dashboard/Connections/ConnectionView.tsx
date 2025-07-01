@@ -6,6 +6,8 @@ import ConnectionForm from "./ConnectionForm";
 import '@taurus/styles/Connections/ConnectionView.css';
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 export default function ConnectionView() {
     const [isAddingConnection, setIsAddingConnection] = useState<boolean>(false); // add connection button
@@ -38,24 +40,34 @@ export default function ConnectionView() {
         )
     }
 
-    return <Box className="connections-view">
-        <div className="connections-header">
-            <div className="title">Connections</div>
-            <div className="button-container">
+    return (
+        <Box className="connections-view">
+            <Box className="connections-header">
+                <Typography variant="h5">Connections</Typography>
+                <Button variant="outlined"
+                    sx={{
+                        bgcolor: 'transparent',
+                        color: 'white',
+                        fontWeight: 600,
+                        borderColor: 'rgba(255,255,255,0.2)',
+                        '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' },
+                    }}>New Connection</Button>
+                {/* <div className="button-container">
                 <button className={`new-connection-button`} onClick={() => {
                     setIsAddingConnection(true);
                 }}>New Connection</button>
-            </div>
-        </div>
-        <Grid container spacing={2} sx={{ px: 2, py: 2 }}>
-                {connections.length > 0 ? connections.map((item, index) => 
-                    <ConnectionItem key={index} connection={item} />
-                ) : <div>Create a connection!</div>}
-        </Grid>
-        {/* <div className="connection-list">
-            {connections.length > 0 ? connections.map((item, index) =>
-                <ConnectionItem key={index} connection={item} />
-            ) : <div>Create a connection!!</div>}
-        </div> */}
-    </Box>;
+            </div> */}
+            </Box>
+            <Box className="connections">
+                {connections.length > 0 ?
+                    <Grid container spacing={2} sx={{ px: 2, py: 2, justifyContent: 'flex-start' }}>
+                        {connections.map((item, index) =>
+                            <Grid key={item.connection_id} size={2}>
+                                <ConnectionItem key={index} connection={item} />
+                            </Grid>
+                        )} </Grid>
+                    : <div>Create a connection!</div>} {/** <-- convert this to a typography, maybe create a nice clean container for it as well  */}
+            </Box>
+        </Box>
+    );
 }
