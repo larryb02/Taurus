@@ -8,7 +8,6 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
 
 
 export default function ConnectionView() {
@@ -55,11 +54,11 @@ export default function ConnectionView() {
                     }}>New Connection</Button>
                     <ConnectionForm open={open} handleClose={handleClose}></ConnectionForm>
             </Box>
-            <Box sx={{}} className="connections">
+            <Box sx={{flexGrow: 1}} className="connections">
                 {connections.length > 0 ?
-                    <Grid container spacing={2} sx={{ px: 2, py: 2, justifyContent: 'flex-start' }}>
+                    <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ px: 1, py: 1, justifyContent: 'flex-start' }}>
                         {connections.map((item, index) =>
-                            <Grid key={item.connection_id} size={2}>
+                            <Grid key={item.connection_id} size={3}>
                                 <ConnectionItem key={index} connection={item} />
                             </Grid>
                         )} </Grid>
