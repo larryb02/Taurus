@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "web_ssh_api"
+version = "0.3.0"
+dependencies = [
+    "fastapi[standard]",
+    "sqlalchemy",
+    "psycopg2-binary",
+    "starsessions",
+    "bcrypt"
+]
+
+[tool.setuptools]
+packages = ["api"]
