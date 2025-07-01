@@ -2,7 +2,11 @@ import { type User } from '@taurus/types';
 import { config } from '@taurus/config';
 import { useNavigate } from 'react-router-dom';
 // import Dropdown from '@taurus/Common/Dropdown';
-import { Avatar, Menu, Box, IconButton, MenuItem } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
 import { deepPurple } from '@mui/material/colors';
 import { useState } from 'react';
 
