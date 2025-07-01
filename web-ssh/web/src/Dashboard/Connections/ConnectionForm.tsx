@@ -252,45 +252,4 @@ export default function ConnectionForm({ open, handleClose}) {
                 </Stack>
             </DialogContent>
         </Dialog>);
-    // <div className={styles.connection_form}>
-    //     <div className="exit-button">
-    //         <button onClick={() => setIsAddingConnection(false)}>Exit</button>
-    //     </div>
-    //     <div className={styles.connection_form_item}>
-    //         <label>Label</label>
-    //         <input type="text" onChange={(e) => {
-    //             updateField(connectionData, setConnectionData, "label", e.target.value);
-    //         }}></input>
-    //     </div>
-    //     <div className={styles.connection_form_item}>
-    //         <label>Username</label>
-    //         <input type="text" onChange={(e) => {
-    //             updateField(connectionData, setConnectionData, "user", e.target.value);
-    //         }}></input>
-    //     </div>
-    //     <div className={styles.connection_form_item}>
-    //         <label>Hostname</label>
-    //         <input type="text" onChange={(e) => {
-    //             updateField(connectionData, setConnectionData, "hostname", e.target.value);
-    //         }}></input>
-    //     </div>
-    //     <div className={styles.connection_form_item}>
-    //         <label>Password</label>
-    //         <input type="password" onChange={(e) => {
-    //             updateField(connectionData, setConnectionData, "password", e.target.value);
-    //         }}></input>
-    //     </div>
-    //     {error !== null &&
-    //         <div className="error-msg">
-    //             {error}
-    //         </div>
-    //     }
-    //     <div className={styles.connection_form_item}>
-    //         <button onClick={() => {
-    //             // addConnection({ label: connectionData.label, host: connectionData.hostname, user: connectionData.user });
-    //             // should also store in db
-    //             createNewConnection();
-    //         }}>Submit</button>
-    //     </div>
-    // </div>;
 }
