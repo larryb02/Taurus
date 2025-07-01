@@ -4,6 +4,8 @@ import { useConnectionsContext } from "./ConnectionsContext";
 import ConnectionItem from "./ConnectionItem";
 import ConnectionForm from "./ConnectionForm";
 import '@taurus/styles/Connections/ConnectionView.css';
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 
 export default function ConnectionView() {
     const [isAddingConnection, setIsAddingConnection] = useState<boolean>(false); // add connection button
@@ -36,7 +38,7 @@ export default function ConnectionView() {
         )
     }
 
-    return <div className="connections-view">
+    return <Box className="connections-view">
         <div className="connections-header">
             <div className="title">Connections</div>
             <div className="button-container">
@@ -45,10 +47,15 @@ export default function ConnectionView() {
                 }}>New Connection</button>
             </div>
         </div>
-        <div className="connection-list">
+        <Grid container spacing={2} sx={{ px: 2, py: 2 }}>
+                {connections.length > 0 ? connections.map((item, index) => 
+                    <ConnectionItem key={index} connection={item} />
+                ) : <div>Create a connection!</div>}
+        </Grid>
+        {/* <div className="connection-list">
             {connections.length > 0 ? connections.map((item, index) =>
                 <ConnectionItem key={index} connection={item} />
             ) : <div>Create a connection!!</div>}
-        </div>
-    </div>;
+        </div> */}
+    </Box>;
 }
