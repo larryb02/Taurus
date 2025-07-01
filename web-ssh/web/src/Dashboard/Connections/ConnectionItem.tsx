@@ -3,8 +3,17 @@ import { useNavigate } from "react-router-dom";
 import '@taurus/styles/Connections/ConnectionItem.css';
 import { useSessionsContext } from '@taurus/context/SessionsContext';
 import Dropdown from "@taurus/Common/Dropdown";
-import { Button, IconButton, Card, CardContent, Typography, Box, Divider } from "@mui/material";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { useState } from "react";
 
 interface ConnectionItemProps {
     connection: Connection;
@@ -13,63 +22,105 @@ interface ConnectionItemProps {
 export default function ConnectionItem({ connection }: ConnectionItemProps) {
     const nav = useNavigate();
     const { dispatch } = useSessionsContext();
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const handleSessionStart = () => {
+        console.log(`Launching ${JSON.stringify(connection)}`);
+        dispatch({
+            type: 'update',
+            payload: connection
+        });
+        nav("/session"); {/* bare minimum to start a terminal */ }
+    }
+    const handleRemove = () => {
+
+    }
     return (
-        <Card sx={{
-            minWidth: 275,
-            bgcolor: 'rgba(255, 255, 255, 0.05)', // translucent gray on dark bg
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: 2,
-            boxShadow: 3,
-            backdropFilter: 'blur(4px)', // optional for extra smoothness
-        }}>
-            <CardContent sx={{
-                justifyContent: 'flex-end',
-                padding: 2,
+        <>
+            <Card sx={{
+                // minWidth: 275,
+                bgcolor: 'rgba(255, 255, 255, 0.05)', // translucent gray on dark bg
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: 2,
+                boxShadow: 3,
+                backdropFilter: 'blur(4px)', // optional for extra smoothness
             }}>
-                <Typography sx={{ color: 'whitesmoke' }}>{connection.label}</Typography>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: 1,
-                        minWidth: 50,
-                        maxWidth: 150,
-                        height: 30,
-                        px: 0,
-                        ml: 'auto'
-                    }}
-                >
-                    <Button
-                        variant="text"
+                <CardContent sx={{
+                    justifyContent: 'flex-end',
+                    padding: 2,
+                }}>
+                    <Typography sx={{ color: 'whitesmoke' }}>{connection.label}</Typography>
+                    <Box
                         sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            borderRadius: 1,
+                            minWidth: 50,
+                            maxWidth: 150,
+                            height: 30,
                             px: 0,
-                            color: 'white',
-                            fontWeight: 600,
-                            textTransform: 'none',
-                            bgcolor: 'transparent',
-                            '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' },
-                            minWidth: 100
+                            ml: 'auto'
                         }}
-                        size="small"
                     >
-                        Connect
-                    </Button>
-                    <Divider orientation="vertical" flexItem sx={{ borderColor: 'rgba(255,255,255,0.2)' }} />
-                    <IconButton
-                        sx={{
-                            px: 1.5,
-                            color: 'white',
-                            borderRadius: 0,
-                            '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' },
-                        }}
-                        size="small"
-                    >
-                        <MoreVertIcon />
-                    </IconButton>
-                </Box>
-            </CardContent>
-        </Card>
+                        <Button
+                            onClick={handleSessionStart}
+                            variant="text"
+                            sx={{
+                                px: 0,
+                                color: 'white',
+                                fontWeight: 600,
+                                textTransform: 'none',
+                                bgcolor: 'transparent',
+                                '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' },
+                                minWidth: 100
+                            }}
+                            size="small"
+                        >
+                            Connect
+                        </Button>
+                        <Divider orientation="vertical" flexItem sx={{ borderColor: 'rgba(255,255,255,0.2)' }} />
+                        <IconButton
+                            sx={{
+                                px: 1.5,
+                                color: 'white',
+                                borderRadius: 0,
+                                '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' },
+                            }}
+                            size="small"
+                            onClick={handleClick}
+                        >
+                            <MoreVertIcon />
+                        </IconButton>
+                    </Box>
+                </CardContent>
+            </Card>
+            <Menu
+                id="account-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                onClick={handleClose}
+            >
+                {/* Removing this because it will be useless in the near future 
+                <MenuItem
+                    onClick={handleEdit}
+                >
+                    Edit
+                </MenuItem> * does nothing currently */}
+                <MenuItem
+                    onClick={handleRemove}
+                >
+                    Remove
+                </MenuItem> {/** does nothing currently */}
+            </Menu>
+        </>
         // <div className="connection_item">
         //     <div className="connection_details">{connection.label}</div>
         //     <div className="connect-button">
