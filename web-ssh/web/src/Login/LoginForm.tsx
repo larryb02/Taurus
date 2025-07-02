@@ -31,7 +31,7 @@ export default function LoginForm() {
         if (!input.email || !regex.test(input.email)) {
             return false;
         }
-        if (!input.password) { // don't have guidelines for strong password yet so no regex here
+        if (!input.password) {
             return false;
         }
         return true;
@@ -64,6 +64,7 @@ export default function LoginForm() {
                 }
             }
             else {
+                
                 navigate("/dashboard");
             }
             const data = await res.json();

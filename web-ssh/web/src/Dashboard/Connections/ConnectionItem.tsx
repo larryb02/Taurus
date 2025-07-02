@@ -1,7 +1,7 @@
 import { type Connection } from "@taurus/types";
 import { useNavigate } from "react-router-dom";
 import '@taurus/styles/Connections/ConnectionItem.css';
-import { useSessionsContext } from '@taurus/context/SessionsContext';
+import { useSessionsContext } from '@taurus/Terminal/SessionsContext';
 import Dropdown from "@taurus/Common/Dropdown";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -122,24 +122,5 @@ export default function ConnectionItem({ connection }: ConnectionItemProps) {
                 </MenuItem> {/** does nothing currently */}
             </Menu>
         </>
-        // <div className="connection_item">
-        //     <div className="connection_details">{connection.label}</div>
-        //     <div className="connect-button">
-        //         <button onClick={() => {
-        //             console.log(`Launching ${JSON.stringify(connection)}`);
-        //             dispatch({
-        //                 type: 'update',
-        //                 payload: connection
-        //             });
-        //             nav("/session"); {/* bare minimum to start a terminal */ }
-        //         }}>Connect
-        //         </button>
-        //         <Dropdown triggerLabel=":" items={[{
-        //             "content": "Edit"
-        //         }, {
-        //             "content": "Remove"
-        //         }]} />
-        //     </div>
-        // </div>
     );
 }

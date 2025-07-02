@@ -4,7 +4,7 @@ import Header from '@taurus/Common/Header';
 import '@taurus/styles/Dashboard.css';
 import ConnectionView from "@taurus/Dashboard/Connections/ConnectionView";
 import { useConnectionsContext } from "@taurus/Dashboard/Connections/ConnectionsContext";
-import { useUserContext } from "@taurus/context/UserContext";
+import { useUserContext } from "@taurus/Auth/UserContext";
 import { config } from "@taurus/config";
 import { type User } from "@taurus/types";
 
@@ -14,10 +14,9 @@ export default function Dashboard() {
     const { setConnections } = useConnectionsContext();
     const { setCurrentUser } = useUserContext();
 
-
     useEffect(() => {
         const fetchUser = async () => {
-            try {
+            try { // TODO: setCurrentUser after successful login instead of on dashboard
                 const res = await fetch(`${config.api.url}${config.api.routes.auth.user}`, {
                     credentials: "include"
                 });

@@ -1,9 +1,9 @@
 import Term from '@taurus/lib/Terminal/Terminal';
 import { useEffect, useState, useRef } from 'react';
-import { useSessionsContext } from '@taurus/context/SessionsContext';
+import { useSessionsContext } from '@taurus/Terminal/SessionsContext';
 import '@taurus/styles/terminal.css';
 
-export default function SshSession() { // need to resolve naming conflicts...
+export default function SshSession() {
     const [error, setError] = useState<string | null>(null);
     const termRef = useRef<Term>(null);
     const { getActiveSession } = useSessionsContext();

@@ -4,7 +4,7 @@
 
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { type User } from '@taurus/types';
-// import { config } from '../config';
+
 
 type Props = {
     children: ReactNode;
@@ -21,23 +21,6 @@ const UserContext = createContext<UserContextInterface | null>(null);
 export const UserContextProvider: React.FC<Props> = ({ children }) => {
     const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
     const [currentUser, setCurrentUser] = useState<User | null>(null);
-
-
-    // useEffect(() => {
-    //     const fetchUser = async () => {
-    //         try {
-    //             const res = await fetch(`${config.api.url}${config.api.routes.auth.user}`, {
-    //                 credentials: "include"
-    //             });
-    //             const json = await res.json();
-    //             console.log(json);
-    //             // return json;
-    //         } catch (error) {
-    //             throw new Error(`Failed to fetch ${error}`);
-    //         }
-    //     }
-    //     fetchUser();
-    // }, [currentUser]);
 
     return (
         <UserContext value={{ isSignedIn, setIsSignedIn, currentUser, setCurrentUser }}>

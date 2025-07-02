@@ -27,7 +27,7 @@ def get_session():
         # yield session
         try:
             yield session
-            # session.commit()
+            session.commit()
         except:
             session.rollback()
             raise

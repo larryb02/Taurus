@@ -1,6 +1,6 @@
 import '@taurus/styles/header.css' // note this will no longer be a module
 import { useNavigate } from 'react-router-dom';
-import { useUserContext } from '@taurus/context/UserContext';
+import { useUserContext } from '@taurus/Auth/UserContext';
 import ProfileCard from './ProfileCard';
 
 export default function Header() {
@@ -10,10 +10,7 @@ export default function Header() {
         <span className="">Alpha</span>
         <span className="">
             {currentUser !== null &&
-                // <div>{currentUser.username}</div>
                 <ProfileCard currentUser={currentUser}/>
-                ||
-                <button onClick={() => nav("/login")}>Log In</button>
             }
         </span>
     </div>);
