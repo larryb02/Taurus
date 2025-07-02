@@ -6,9 +6,9 @@ type Props = {
 };
 
 interface SessionsContextInterface {
-    // getActiveSession: () => Connection | null;
+    getActiveSession: () => Connection | null;
     // getActiveSessions: () => Connection[];
-    // setActiveSession: (value: Connection) => void;
+    setActiveSession: (value: Connection) => void;
     sessions: Connection[];
     dispatch: React.Dispatch<Action>;
 }
@@ -53,7 +53,7 @@ export const SessionsContextProvider: React.FC<Props> = ({ children }) => {
     const [activeSession, setActiveSession] = useState<Connection | null>(null);
     const [sessions, dispatch] = useReducer(reducer, []);
 
-    function getActiveSession(): Connection | null { // i definitely need to test this.
+    function getActiveSession(): Connection | null {
         if (!activeSession) {
             console.warn("No sessions active");
             return null;
@@ -62,7 +62,7 @@ export const SessionsContextProvider: React.FC<Props> = ({ children }) => {
     }
 
     return (
-        <SessionsContext value={{ sessions, dispatch }}>
+        <SessionsContext value={{ getActiveSession, setActiveSession, sessions, dispatch }}>
             {children}
         </SessionsContext>
     );

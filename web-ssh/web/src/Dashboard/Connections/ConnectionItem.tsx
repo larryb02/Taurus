@@ -21,7 +21,7 @@ interface ConnectionItemProps {
 
 export default function ConnectionItem({ connection }: ConnectionItemProps) {
     const nav = useNavigate();
-    const { dispatch } = useSessionsContext();
+    const { dispatch, setActiveSession } = useSessionsContext();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -32,6 +32,7 @@ export default function ConnectionItem({ connection }: ConnectionItemProps) {
     };
     const handleSessionStart = () => {
         console.log(`Launching ${JSON.stringify(connection)}`);
+        setActiveSession(connection);
         dispatch({
             type: 'update',
             payload: connection
