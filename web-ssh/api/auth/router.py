@@ -66,12 +66,22 @@ def login_user(user: UserLogin, session: DbSession, request: Request):
     # store user in session object or something
     user_acc = get_user_by_email(user.email_or_user, session)
     if not user_acc:
+        auth_logger.info("Email address not found")
         raise HTTPException(status_code=403, detail="Failed to login")
     user_acc = dict(get_user_by_email(user.email_or_user, session)._mapping)
     try:
         session = login(user_acc, user.password)
         request.session["user_id"] = session
-        return session
+        auth_logger.info(
+            "successfully logged in"
+        )  # make sure we include request info in logs
+        return {
+            "result": {
+                "user_id": user_acc["user_id"],
+                "username": user_acc["username"],
+                "email_address": user_acc["email_address"],
+            }
+        }
     except Exception as e:
         print(f"Exception: {e}")
         raise HTTPException(status_code=403, detail="Failed to login")
