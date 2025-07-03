@@ -3,7 +3,7 @@ import json
 from .models import SSHConn
 from ..db.core import DbSession
 import logging
-from .service import get_all, create, get_credentials, decrypt
+from .service import get_all, create, get_credentials, delete_conn
 from ..auth.service import get_current_user, get_user_by_id
 from base64 import b64encode, b64decode
 import pickle
@@ -78,4 +78,14 @@ def create_connection(conn: SSHConn, session: DbSession, request: Request):
         return {"results": res}
     except Exception as e:
         ssh_logger.error(f"Failed to create user: {e}")
+        raise HTTPException(status_code=400, detail="Failed to process request")
+    
+@router.delete("/connection/{connection_id}")
+def delete_connection(connection_id: int, session: DbSession, request: Request):
+    try:
+        ssh_logger.info(f"DELETE /connection/{connection_id}")
+        res = dict(delete_conn(connection_id, session)._mapping)
+        return {"results": res}
+    except Exception as e:
+        ssh_logger.error(f"Failed to delete connection: {e}")
         raise HTTPException(status_code=400, detail="Failed to process request")
