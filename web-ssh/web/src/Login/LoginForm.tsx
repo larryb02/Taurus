@@ -31,7 +31,9 @@ export default function LoginForm() {
         if (!input.email || !regex.test(input.email)) {
             return false;
         }
-        if (!input.password) {
+        // TODO: add password constraints:
+        // min-length = 5 characters
+        if (!input.password) { 
             return false;
         }
         return true;
