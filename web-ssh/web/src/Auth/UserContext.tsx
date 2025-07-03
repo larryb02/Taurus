@@ -1,5 +1,5 @@
 /*
-    Information about the currently signed in user
+    Information about the currently signed in user, this is strictly for rendering user metadata
  */
 
 import { createContext, useContext, useState, type ReactNode } from "react";
