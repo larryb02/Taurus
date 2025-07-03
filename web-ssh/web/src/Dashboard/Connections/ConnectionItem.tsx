@@ -2,7 +2,6 @@ import { type Connection } from "@taurus/types";
 import { useNavigate } from "react-router-dom";
 import '@taurus/styles/Connections/ConnectionItem.css';
 import { useSessionsContext } from '@taurus/Terminal/SessionsContext';
-import Dropdown from "@taurus/Common/Dropdown";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Card from "@mui/material/Card";
@@ -14,15 +13,32 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { config } from "@taurus/config";
+import { useConnectionsContext } from "./ConnectionsContext";
 
 interface ConnectionItemProps {
     connection: Connection;
 }
-
+const removeConn = async (id: number) => {
+    try {
+        const res = await fetch(`${config.api.url}${config.api.routes.ssh.connection}/${id}`, {
+            method: 'DELETE'
+        })
+        if (!res.ok) {
+            throw new Error(`HTTP error ${res.status} ${res.statusText}`);
+        }
+        return res.json();
+    } catch (error) {
+        console.error(`${error}`);
+    }
+}
 export default function ConnectionItem({ connection }: ConnectionItemProps) {
     const nav = useNavigate();
     const { dispatch, setActiveSession } = useSessionsContext();
+    const { removeConnection } = useConnectionsContext();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -39,7 +55,13 @@ export default function ConnectionItem({ connection }: ConnectionItemProps) {
         });
         nav("/session"); {/* bare minimum to start a terminal */ }
     }
-    const handleRemove = () => {
+    const mutation = useMutation({ mutationFn: removeConn });
+    const handleRemove = (conn_id: number) => {
+        mutation.mutate(conn_id, {
+            onSuccess() {
+                removeConnection(connection);
+            }
+        })
 
     }
     return (
@@ -116,7 +138,7 @@ export default function ConnectionItem({ connection }: ConnectionItemProps) {
                     Edit
                 </MenuItem> * does nothing currently */}
                 <MenuItem
-                    onClick={handleRemove}
+                    onClick={() => handleRemove(connection.connection_id)}
                 >
                     Remove
                 </MenuItem> {/** does nothing currently */}
