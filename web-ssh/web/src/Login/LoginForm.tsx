@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { updateField } from '@taurus/utils';
 import { config } from '@taurus/config';
+import { useMutation } from '@tanstack/react-query';
 
 type UserLoginForm = {
     email: string;
@@ -18,14 +19,44 @@ type UserLoginForm = {
 const handleChange = () => {
     // TODO: create a handler that can update the field that got changed
 }
+const signIn = async (email: string, password: string) => {
+    const res = await fetch(`${config.api.url}${config.api.routes.auth.login}`,
+        {
+            method: "POST",
+            body: JSON.stringify({
+                "email_or_user": email,
+                "password": password
+            }),
+            headers: {
+                "content-type": "application/json"
+            },
+            credentials: "include"
+        }
+    );
+    if (!res.ok) {
+        console.error(`Error signing in ${res.status}, ${res.statusText}`);
+        throw new Error(`${res.status}`);
+    }
+    return res.json();
+}
 export default function LoginForm() {
+    // TODO: start defining callbacks outside of mutation hook
+
     const [userData, setUserData] = useState<UserLoginForm>({
         email: "",
         password: ""
     });
-
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const mutation = useMutation({
+        mutationFn: () => signIn(userData.email, userData.password), onSuccess() {
+            console.log("successfully signed in");
+            navigate("/dashboard");
+        }, onError(error) {
+            console.error(`Failed to log in error: ${error}`);
+            setError("Failed to log in");
+        }
+    });
     const validate = (input: UserLoginForm) => {
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!input.email || !regex.test(input.email)) {
@@ -33,54 +64,12 @@ export default function LoginForm() {
         }
         // TODO: add password constraints:
         // min-length = 5 characters
-        if (!input.password) { 
+        if (!input.password) {
             return false;
         }
         return true;
     }
 
-    const signIn = async () => {
-        try {
-            const res = await fetch(`${config.api.url}${config.api.routes.auth.login}`,
-                {
-                    method: "POST",
-                    body: JSON.stringify({
-                        "email_or_user": userData.email,
-                        "password": userData.password
-                    }),
-                    headers: {
-                        "content-type": "application/json"
-                    },
-                    credentials: "include"
-                }
-            );
-            if (!res.ok) {
-                const statusCode = res.status;
-                switch (statusCode) {
-                    case 403:
-                        setError("Incorrect username or password.");
-                        break;
-                    default:
-                        setError("Something went wrong, please try again.");
-                        break;
-                }
-            }
-            else {
-                
-                navigate("/dashboard");
-            }
-            const data = await res.json();
-            console.log(data);
-        } catch (error) {
-            setError("Internal Server Error. Please try again.");
-            throw new Error(`Failed to fetch: {
-                    Route: ${config.api.routes.auth.login}
-                    Error: ${error}}`
-            );
-        }
-
-
-    }
 
     return (
 
@@ -108,12 +97,13 @@ export default function LoginForm() {
                     boxShadow: 4,
                 }}
                 onSubmit={(e) => {
+                    console.log("submitting form.")
                     e.preventDefault();
                     if (!validate(userData)) {
                         setError("Username or Password is invalid"); // okay make this more fine grained
                         return;
                     }
-                    signIn();
+                    mutation.mutate();
                 }}
             >
                 <Stack spacing={2}>
