@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { updateField } from '@taurus/utils';
 import { config } from '@taurus/config';
 import { useMutation } from '@tanstack/react-query';
+import { useUserContext } from '@taurus/Auth/UserContext';
 
 type UserLoginForm = {
     email: string;
@@ -41,7 +42,7 @@ const signIn = async (email: string, password: string) => {
 }
 export default function LoginForm() {
     // TODO: start defining callbacks outside of mutation hook
-
+    const { currentUser, setCurrentUser } = useUserContext();
     const [userData, setUserData] = useState<UserLoginForm>({
         email: "",
         password: ""
@@ -49,8 +50,11 @@ export default function LoginForm() {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
     const mutation = useMutation({
-        mutationFn: () => signIn(userData.email, userData.password), onSuccess() {
+        mutationFn: () => signIn(userData.email, userData.password), 
+        onSuccess(data) {
             console.log("successfully signed in");
+            // console.log(`Data: ${JSON.stringify(data)}`);
+            setCurrentUser(data["result"]);
             navigate("/dashboard");
         }, onError(error) {
             console.error(`Failed to log in error: ${error}`);
