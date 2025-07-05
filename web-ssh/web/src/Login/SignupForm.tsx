@@ -1,9 +1,16 @@
-import { Stack, TextField, Alert, Typography, Button, Box, Container } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Alert from "@mui/material/Alert";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Snackbar from "@mui/material/Snackbar";
+import Link from "@mui/material/Link";
 import { useState } from 'react';
 import { updateField } from "../utils";
 import { config } from "@taurus/config";
 import { useMutation } from "@tanstack/react-query";
-import Snackbar from "@mui/material/Snackbar";
 
 type NewUserForm = {
     email: string;
@@ -197,6 +204,9 @@ export default function SignUpForm() {
                     <Button color="success" type="submit" variant="contained" fullWidth>
                         Sign Up
                     </Button>
+                    <Typography variant="subtitle2">
+                        Already have an account? <Link href='/login'>Sign In</Link>
+                    </Typography>
                 </Stack>
             </Box>
         </Container>
