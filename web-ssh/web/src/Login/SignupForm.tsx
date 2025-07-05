@@ -121,7 +121,6 @@ export default function SignUpForm() {
                         }
                         sx={{
                             bgcolor: 'white',
-                            // bgcolor: 'white'
                         }}
                         placeholder="Username"
                         onChange={(e) => {
@@ -143,7 +142,6 @@ export default function SignUpForm() {
                         }
                         sx={{
                             bgcolor: 'white',
-                            // bgcolor: 'white'
                         }}
                         placeholder="Email Address"
                         onChange={(e) => {
@@ -164,7 +162,6 @@ export default function SignUpForm() {
                         }
                         sx={{
                             bgcolor: 'white',
-                            // bgcolor: 'white'
                         }}
                         placeholder="Password"
                         type="password"
@@ -174,8 +171,6 @@ export default function SignUpForm() {
                             }
                             updateField(signUpProps, setSignUpProps, "password", e.target.value)
                         }}
-                    // error={true}
-                    // helperText={"this is a test"}
 
                     ></TextField>
                     <TextField
@@ -188,7 +183,6 @@ export default function SignUpForm() {
                         }
                         sx={{
                             bgcolor: 'white',
-                            // bgcolor: 'white'
                         }}
                         placeholder="Confirm Password"
                         type="password"
