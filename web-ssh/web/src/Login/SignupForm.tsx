@@ -2,6 +2,8 @@ import { Stack, TextField, Alert, Typography, Button, Box, Container } from "@mu
 import { useState } from 'react';
 import { updateField } from "../utils";
 import { config } from "@taurus/config";
+import { useMutation } from "@tanstack/react-query";
+import Snackbar from "@mui/material/Snackbar";
 
 type NewUserForm = {
     email: string;
@@ -19,6 +21,41 @@ export default function SignUpForm() {
     })
 
     const [error, setError] = useState<string | null>(null);
+    const signUp = async () => {
+        const res = await fetch(`${config.api.url}${config.api.routes.auth.user}`,
+            {
+                method: "POST",
+                body: JSON.stringify({
+                    "email": signUpProps.email,
+                    "username": signUpProps.username,
+                    "password": signUpProps.password
+                }),
+                headers: {
+                    "content-type": "application/json",
+                }
+            }
+        );
+        if (!res.ok) {
+            throw new Error(`Failed to fetch: {
+                    Status Code: ${res.status}
+                    Msg: ${res.statusText}}`);
+        }
+        return res.json();
+    }
+
+    const mutation = useMutation({
+        mutationFn: signUp,
+        onSuccess: (data) => { console.log(`Successfully created new user: ${JSON.stringify(data)}`) },
+        onError: (error) => { console.error(`Error occurred: ${error}`) }
+    });
+
+    const handleSignUp = () => {
+        if (!validate(signUpProps)) {
+            setError("Username or Password is invalid"); // okay make this more fine grained
+            return;
+        }
+        mutation.mutate();
+    }
 
     const validate = (input: NewUserForm) => {
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -37,48 +74,6 @@ export default function SignUpForm() {
         return true;
     }
 
-    const signUp = async () => {
-        if (signUpProps.password !== signUpProps.confirmPassword) {
-            console.log("Passwords do not match.");
-            return;
-        }
-        try {
-            const res = await fetch(`${config.api.url}${config.api.routes.auth.user}`,
-                {
-                    method: "POST",
-                    body: JSON.stringify({
-                        "email": signUpProps.email,
-                        "username": signUpProps.username,
-                        "password": signUpProps.password
-                    }),
-                    headers: {
-                        "content-type": "application/json",
-                    }
-                }
-            );
-            if (!res.ok) {
-                setError("Failed to create user, please try again.");
-                throw new Error(`Failed to fetch: {
-                    Status Code: ${res.status}
-                    Msg: ${res.statusText}}`);
-            }
-            else { // on success display toast and redirect to login
-                console.log("Successfully created new account");
-                setSignUpProps({
-                    email: "",
-                    username: "",
-                    password: "",
-                    confirmPassword: ""
-                });
-                console.log(signUpProps);
-            }
-        } catch (error) {
-            throw new Error(`Failed to fetch: {
-                Route: ${config.api.routes.auth.user}
-                Error: ${error}}`
-            );
-        }
-    }
     return (
         <Container maxWidth={false} disableGutters
             sx={{
@@ -104,11 +99,7 @@ export default function SignUpForm() {
                 }}
                 onSubmit={(e) => {
                     e.preventDefault();
-                    if (!validate(signUpProps)) {
-                        setError("Username or Password is invalid"); // okay make this more fine grained
-                        return;
-                    }
-                    signUp();
+                    handleSignUp();
                 }}
             >
 
