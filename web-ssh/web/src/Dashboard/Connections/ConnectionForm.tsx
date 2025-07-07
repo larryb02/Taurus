@@ -20,7 +20,7 @@ export default function ConnectionForm({ open, handleClose}) {
 
     const [connectionData, setConnectionData] = useState<Record<string, string>>({
         "label": "",
-        "user": "",
+        "username": "",
         "password": "",
         "hostname": ""
     });
@@ -79,7 +79,7 @@ export default function ConnectionForm({ open, handleClose}) {
                 connection_id: connection_id,
                 label: label,
                 hostname: hostname,
-                user: connectionData.user, // Response currently isn't returning user, i should change this 
+                username: connectionData.user, // Response currently isn't returning user, i should change this 
             });
             handleClose();
             // setIsAddingConnection(false);

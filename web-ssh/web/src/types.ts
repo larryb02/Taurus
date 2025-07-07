@@ -2,7 +2,7 @@
 export interface Connection {
     label: string;
     hostname: string;
-    user: string;
+    username: string;
     connection_id: number;
     // pass: string;
 }
