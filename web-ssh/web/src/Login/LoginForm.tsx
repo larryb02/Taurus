@@ -167,7 +167,13 @@ export default function LoginForm() {
                     // required
                     />
                     <Link variant="subtitle2">Forgot password?</Link>
-                    <Button color="success" type="submit" variant="contained" fullWidth>
+                    <Button color="success" type="submit" variant="contained" sx={{
+                        bgcolor: '#2e2e2e',
+                        color: 'white',
+                        '&:hover': {
+                            bgcolor: '#3a3a3a',
+                        },
+                    }}fullWidth>
                         Sign In
                     </Button>
                     <Typography variant="subtitle2">

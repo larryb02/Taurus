@@ -209,7 +209,13 @@ export default function SignUpForm({ }) {
                         }}
 
                     ></TextField>
-                    <Button color="success" type="submit" variant="contained" fullWidth>
+                    <Button color="success" type="submit" variant="contained" sx={{
+                        bgcolor: '#2e2e2e',
+                        color: 'white',
+                        '&:hover': {
+                            bgcolor: '#3a3a3a',
+                        },
+                    }}fullWidth>
                         Sign Up
                     </Button>
                     <Typography variant="subtitle2">
