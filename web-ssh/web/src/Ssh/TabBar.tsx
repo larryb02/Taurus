@@ -1,4 +1,4 @@
-import { useSessionsContext } from '@taurus/Terminal/SessionsContext';
+import { useSessionsContext } from '@taurus/Ssh/SshSessionContext';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';

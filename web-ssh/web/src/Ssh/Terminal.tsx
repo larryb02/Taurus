@@ -1,6 +1,6 @@
 import Term from '@taurus/lib/Terminal/Terminal';
 import { useEffect, useState, useRef } from 'react';
-import { useSessionsContext } from '@taurus/Terminal/SessionsContext';
+import { useSessionsContext } from '@taurus/Ssh/SshSessionContext';
 import '@taurus/styles/terminal.css';
 
 export default function SshSession() {

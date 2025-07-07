@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Dashboard from "@taurus/Dashboard/Dashboard";
-import TerminalView from "@taurus/Terminal/TerminalView";
+import TerminalView from "@taurus/Ssh/TerminalView";
 import Login from '@taurus/Login/Login';
 import SignUp from '@taurus/Login/SignUp';
 import { ConnectionsContextProvider } from "@taurus/Dashboard/Connections/ConnectionsContext"; // DO NOT LEAVE THIS HERE, or at least scope it down more
-import { SessionsContextProvider } from "@taurus/Terminal/SessionsContext";
+import { SessionsContextProvider } from "@taurus/Ssh/SshSessionContext";
 import { UserContextProvider } from "@taurus/Auth/UserContext";
 import { ToastContextProvider } from "@taurus/Common/ToastContext";
 import ProtectedRoute from '@taurus/Auth/ProtectedRoute';

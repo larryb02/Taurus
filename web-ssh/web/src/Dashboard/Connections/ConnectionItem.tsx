@@ -1,7 +1,7 @@
 import { type Connection } from "@taurus/types";
 import { useNavigate } from "react-router-dom";
 import '@taurus/styles/Connections/ConnectionItem.css';
-import { useSessionsContext } from '@taurus/Terminal/SessionsContext';
+import { useSessionsContext } from '@taurus/Ssh/SshSessionContext';
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Card from "@mui/material/Card";
