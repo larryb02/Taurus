@@ -5,12 +5,13 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Snackbar from "@mui/material/Snackbar";
 import Link from "@mui/material/Link";
 import { useState } from 'react';
 import { updateField } from "../utils";
 import { config } from "@taurus/config";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { useToastContext } from "@taurus/Common/ToastContext";
 
 type NewUserForm = {
     email: string;
@@ -19,7 +20,8 @@ type NewUserForm = {
     confirmPassword: string;
 }
 
-export default function SignUpForm() {
+export default function SignUpForm({ }) {
+    const navigate = useNavigate();
     const [signUpProps, setSignUpProps] = useState<NewUserForm>({
         email: "",
         username: "",
@@ -49,10 +51,16 @@ export default function SignUpForm() {
         }
         return res.json();
     }
-
+    const { setOpen } = useToastContext();
     const mutation = useMutation({
         mutationFn: signUp,
-        onSuccess: (data) => { console.log(`Successfully created new user: ${JSON.stringify(data)}`) },
+        onSuccess: (data) => {
+            console.log(`Successfully created new user: ${JSON.stringify(data)}`);
+            // need to notify 
+            setOpen(true);
+            navigate("/login");
+
+        },
         onError: (error) => { console.error(`Error occurred: ${error}`) }
     });
 

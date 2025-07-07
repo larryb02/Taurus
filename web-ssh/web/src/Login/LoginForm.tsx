@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { updateField } from '@taurus/utils';
 import { config } from '@taurus/config';
@@ -50,7 +50,7 @@ export default function LoginForm() {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
     const mutation = useMutation({
-        mutationFn: () => signIn(userData.email, userData.password), 
+        mutationFn: () => signIn(userData.email, userData.password),
         onSuccess(data) {
             console.log("successfully signed in");
             // console.log(`Data: ${JSON.stringify(data)}`);

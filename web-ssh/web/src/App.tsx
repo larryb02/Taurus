@@ -6,6 +6,7 @@ import SignUp from '@taurus/Login/SignUp';
 import { ConnectionsContextProvider } from "@taurus/Dashboard/Connections/ConnectionsContext"; // DO NOT LEAVE THIS HERE, or at least scope it down more
 import { SessionsContextProvider } from "@taurus/Terminal/SessionsContext";
 import { UserContextProvider } from "@taurus/Auth/UserContext";
+import { ToastContextProvider } from "./Common/ToastContext";
 import ProtectedRoute from '@taurus/Auth/ProtectedRoute';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -17,22 +18,24 @@ function App() {
       <ConnectionsContextProvider>
         <SessionsContextProvider>
           <UserContextProvider>
-            <Router>
-              <Routes>
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="dashboard" element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>} />
-                <Route path="session" element={
-                  <ProtectedRoute>
-                    <TerminalView />
-                  </ProtectedRoute>
-                } />
-                <Route path="login" element={<Login />} />
-                <Route path="signup" element={<SignUp />} />
-              </Routes>
-            </Router>
+            <ToastContextProvider>
+              <Router>
+                <Routes>
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="dashboard" element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>} />
+                  <Route path="session" element={
+                    <ProtectedRoute>
+                      <TerminalView />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="login" element={<Login />} />
+                  <Route path="signup" element={<SignUp />} />
+                </Routes>
+              </Router>
+            </ToastContextProvider>
           </UserContextProvider>
         </SessionsContextProvider>
       </ConnectionsContextProvider>
