@@ -6,7 +6,7 @@ import SignUp from '@taurus/Login/SignUp';
 import { ConnectionsContextProvider } from "@taurus/Dashboard/Connections/ConnectionsContext"; // DO NOT LEAVE THIS HERE, or at least scope it down more
 import { SessionsContextProvider } from "@taurus/Terminal/SessionsContext";
 import { UserContextProvider } from "@taurus/Auth/UserContext";
-import { ToastContextProvider } from "./Common/ToastContext";
+import { ToastContextProvider } from "@taurus/Common/ToastContext";
 import ProtectedRoute from '@taurus/Auth/ProtectedRoute';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
